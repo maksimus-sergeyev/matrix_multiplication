@@ -1,0 +1,32 @@
+//L1 cache - 640 KB, L2 cache - 4 MB, L3 cache - 16 MB
+//block_size <= sqrt ( L2 / (3 * sizeof(T)) )
+DPCPP compiler
+
+size = 4096
+block_size	time
+16		25.2	
+32		18.3
+64		15.3
+128		14.9
+256		15.7
+512		14.4
+
+size = 4000
+block_size	time
+20		14.7
+25		14.7
+32		11.7
+40		11.8
+50		11.6
+80		12.4
+100		13.4
+200		12.8
+400		13.8
+
+size = 2000
+block_size	time
+50		1.724
+80		1.700
+100		1.725
+200		1.715
+400		1.724
