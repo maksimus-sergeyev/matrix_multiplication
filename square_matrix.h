@@ -143,8 +143,9 @@ public:
         // sqrt( L1 / (3 * sizeof(double)) = 165
         // T = double, block_size <= 418;
 
-        int block_size = 400; 
+        int block_size = 40; 
 
+        //if (size % block_size == 0) time*=1.5
         if (size % block_size == 0) 
         {
             for (int i1 = 0; i1 < size; i1 += block_size)
@@ -153,7 +154,7 @@ public:
                         for (int i2 = i1; i2 < i1 + block_size; i2++)
                             for (int k2 = k1; k2 < k1 + block_size; k2++)
                                 for (int j2 = j1; j2 < j1 + block_size; j2++)
-                                    RES[i2 * size + j2] += F[i2 * size + k2] * S[k2 * size + j2];  
+                                    RES[i2 * size + j2] += F[i2 * size + k2] * S[k2 * size + j2];
         }
         else 
         {
