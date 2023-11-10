@@ -18,12 +18,18 @@ public:
 
         arr = new T[size * size]();
     }
-    square_matrix(square_matrix& _m)
+    square_matrix(square_matrix& m)
     {
-        size = _m.size;
+        size = m.size;
         arr = new T[size * size]();
         for (int i = 0; i < size * size; i++)
-            arr[i] = _m[i];
+            arr[i] = m[i];
+    }
+    square_matrix(square_matrix&& m)
+    {
+        arr = nullptr;
+        std::swap(size, m.size);
+        std::swap(arr, m.arr);
     }
     ~square_matrix()
     {
@@ -54,7 +60,7 @@ public:
     }
     square_matrix& operator=(const square_matrix& m)
     {
-        if (*this == m) return *this;
+        if (this == &m) return *this;
 
         if (size != m.size)
         {
@@ -71,12 +77,6 @@ public:
     }
     square_matrix& operator=(square_matrix&& m) noexcept
     {
-        delete[] arr;
-
-        arr = nullptr;
-
-        size = 0;
-
         std::swap(arr, m.arr);
         std::swap(size, m.size);
 
@@ -143,7 +143,7 @@ public:
         // sqrt( L1 / (3 * sizeof(double)) = 165
         // T = double, block_size <= 418;
 
-        int block_size = 40; 
+        int block_size = 40;
 
         //if (size % block_size == 0) time*=1.5
         if (size % block_size == 0) 
