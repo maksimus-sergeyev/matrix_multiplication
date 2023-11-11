@@ -25,11 +25,10 @@ public:
         for (int i = 0; i < size * size; i++)
             arr[i] = m[i];
     }
-    square_matrix(square_matrix&& m)
+    square_matrix(square_matrix&& m): arr(m.arr), size(m.size)
     {
-        arr = nullptr;
-        std::swap(size, m.size);
-        std::swap(arr, m.arr);
+        m.size = 0;
+        m.arr = nullptr;
     }
     ~square_matrix()
     {
@@ -77,8 +76,15 @@ public:
     }
     square_matrix& operator=(square_matrix&& m) noexcept
     {
-        std::swap(arr, m.arr);
-        std::swap(size, m.size);
+        delete[] arr;
+
+        arr = m.arr;
+
+        size = m.size;
+
+        m.arr = nullptr;
+
+        m.size = 0;
 
         return *this;
     }
