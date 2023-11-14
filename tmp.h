@@ -22,9 +22,9 @@ int correctness(double EPS) // 0 = correctly
 
 					C = A * B;
 
-					block_mult(A, B, D, 5);
+					block_mult(A, B, D, 4, 8);
 
-					parallel_block_mult(A, B, F, 5);
+					parallel_block_mult(A, B, F, 4, 8);
 
 					if ((C - D).norm() > EPS)
 						return 1;

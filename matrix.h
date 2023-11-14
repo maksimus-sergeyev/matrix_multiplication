@@ -146,257 +146,287 @@ public:
                 for (int j = 0; j < S.col; j++)
                     RES[i * RES.col + j] += F[i * F.col + k] * S[k * S.col + j];
     }
-    inline
-    friend void block_mult(matrix& F, matrix& S, matrix& RES, int block_size = 40)
+    inline      //remove '_' before 'block_size_row' and 'block_size_col' and delete declaration block_size_row and block_size_col as const
+    friend void block_mult(matrix& F, matrix& S, matrix& RES, int _block_size_row = 32, int _block_size_col = 64)
     {
         if ((F.col != S.row) || (F.row != RES.row) || (S.col != RES.col)) throw std::invalid_argument("matrices sizes should match!");
 
-        int t = F.row - (F.row % block_size);
-        int l = S.col - (S.col % block_size);
-        int s = F.col - (F.col % block_size);
+        const int block_size_row = 40;
+        const int block_size_col = 40;
 
-        for (int i1 = 0; i1 < t; i1 += block_size)
-            for (int j1 = 0; j1 < l; j1 += block_size)
-                for (int k1 = 0; k1 < s; k1 += block_size)
-                    for (int i2 = i1; i2 < i1 + block_size; i2++)
-                        for (int k2 = k1; k2 < k1 + block_size; k2++)
-                            for (int j2 = j1; j2 < j1 + block_size; j2++)
+        int t = F.row - (F.row % block_size_row);
+        int l = S.col - (S.col % block_size_col);
+        int s = F.col - (F.col % block_size_col);
+
+        for (int i1 = 0; i1 < t; i1 += block_size_row)
+            for (int k1 = 0; k1 < s; k1 += block_size_col)
+                for (int j1 = 0; j1 < l; j1 += block_size_col)
+                    for (int i2 = i1; i2 < i1 + block_size_row; i2++)
+                        for (int k2 = k1; k2 < k1 + block_size_col; k2++)
+#pragma omp simd
+                            for (int j2 = j1; j2 < j1 + block_size_col; j2++)
                                 RES[i2 * RES.col + j2] += F[i2 * F.col + k2] * S[k2 * S.col + j2];
 
-        if (S.col % block_size == 0)
+        if (S.col % block_size_col == 0)
         {
-            if (((F.row % block_size) != 0) && ((F.col % block_size) != 0))
+            if (((F.row % block_size_row) != 0) && ((F.col % block_size_col) != 0))
             {
-                int s = F.col - (F.col % block_size);
+                //int s = F.col - (F.col % block_size_col);
 
                 for (int i = 0; i < F.row; i++)
                     for (int k = s; k < F.col; k++)
+#pragma omp simd
                         for (int j = 0; j < S.col; j++)
                             RES[i * RES.col + j] += F[i * F.col + k] * S[k * S.col + j];
 
-                int t = F.row - (F.row % block_size);
+                //int t = F.row - (F.row % block_size_row);
 
                 for (int i = t; i < F.row; i++)
                     for (int k = 0; k < s; k++)
+#pragma omp simd
                         for (int j = 0; j < S.col; j++)
                             RES[i * RES.col + j] += F[i * F.col + k] * S[k * S.col + j];
             }
-            else if (((F.row % block_size) != 0) && ((F.col % block_size) == 0))
+            else if (((F.row % block_size_row) != 0) && ((F.col % block_size_col) == 0))
             {
-                int t = F.row - (F.row % block_size);
+                //int t = F.row - (F.row % block_size_row);
 
                 for (int i = t; i < F.row; i++)
                     for (int k = 0; k < F.col; k++)
+#pragma omp simd
                         for (int j = 0; j < S.col; j++)
                             RES[i * RES.col + j] += F[i * F.col + k] * S[k * S.col + j];
                 
             }
-            else if (((F.row % block_size) == 0) && ((F.col % block_size) != 0))
+            else if (((F.row % block_size_row) == 0) && ((F.col % block_size_col) != 0))
             {
-                int s = F.col - (F.col % block_size);
+                //int s = F.col - (F.col % block_size_col);
 
                 for (int i = 0; i < F.row; i++)
                     for (int k = s; k < F.col; k++)
+#pragma omp simd
                         for (int j = 0; j < S.col; j++)
                             RES[i * RES.col + j] += F[i * F.col + k] * S[k * S.col + j];
 
             }
         }
-        else if (S.col % block_size != 0) 
+        else if (S.col % block_size_col != 0) 
         {
-            if (((F.row % block_size) != 0) && ((F.col % block_size) != 0))
+            if (((F.row % block_size_row) != 0) && ((F.col % block_size_col) != 0))
             {
-                int s = F.col - (F.col % block_size);
+                //int s = F.col - (F.col % block_size_col);
 
                 for (int i = 0; i < F.row; i++)
                     for (int k = s; k < F.col; k++)
+#pragma omp simd
                         for (int j = 0; j < S.col; j++)
                             RES[i * RES.col + j] += F[i * F.col + k] * S[k * S.col + j];
 
-                int t = F.row - (F.row % block_size);
+                //int t = F.row - (F.row % block_size_row);
 
                 for (int i = t; i < F.row; i++)
                     for (int k = 0; k < s; k++)
+#pragma omp simd
                         for (int j = 0; j < S.col; j++)
                             RES[i * RES.col + j] += F[i * F.col + k] * S[k * S.col + j];
 
-                int l = S.col - (S.col % block_size);
+                //int l = S.col - (S.col % block_size_col);
 
                 for (int i = 0; i < t; i++)
                     for (int k = 0; k < s; k++)
+#pragma omp simd
                         for (int j = l; j < S.col; j++)
                             RES[i * RES.col + j] += F[i * F.col + k] * S[k * S.col + j];
             }
-            else if (((F.row % block_size) != 0) && ((F.col % block_size) == 0))
+            else if (((F.row % block_size_row) != 0) && ((F.col % block_size_col) == 0))
             {
-                int t = F.row - (F.row % block_size);
+                //int t = F.row - (F.row % block_size_row);
 
                 for (int i = t; i < F.row; i++)
                     for (int k = 0; k < F.col; k++)
+#pragma omp simd
                         for (int j = 0; j < S.col; j++)
                             RES[i * RES.col + j] += F[i * F.col + k] * S[k * S.col + j];
 
-                int l = S.col - (S.col % block_size);
+                //int l = S.col - (S.col % block_size_col);
 
                 for (int i = 0; i < t; i++)
                     for (int k = 0; k < F.col; k++)
+#pragma omp simd
                         for (int j = l; j < S.col; j++)
                             RES[i * RES.col + j] += F[i * F.col + k] * S[k * S.col + j];
             }
-            else if (((F.row% block_size) == 0) && ((F.col% block_size) != 0))
+            else if (((F.row% block_size_row) == 0) && ((F.col% block_size_col) != 0))
             {
-                int s = F.col - (F.col % block_size);
+                //int s = F.col - (F.col % block_size_col);
 
                 for (int i = 0; i < F.row; i++)
                     for (int k = s; k < F.col; k++)
+#pragma omp simd
                         for (int j = 0; j < S.col; j++)
                             RES[i * RES.col + j] += F[i * F.col + k] * S[k * S.col + j];
 
-                int l = S.col - (S.col % block_size);
+                //int l = S.col - (S.col % block_size_col);
 
                 for (int i = 0; i < F.row; i++)
                     for (int k = 0; k < s; k++)
+#pragma omp simd
                         for (int j = l; j < S.col; j++)
                             RES[i * RES.col + j] += F[i * F.col + k] * S[k * S.col + j];
             }
-            else if (((F.row % block_size) == 0) && ((F.col % block_size) == 0))
+            else if (((F.row % block_size_row) == 0) && ((F.col % block_size_col) == 0))
             {
-                int l = S.col - (S.col % block_size);
+                //int l = S.col - (S.col % block_size_col);
 
                 for (int i = 0; i < F.row; i++)
                     for (int k = 0; k < F.col; k++)
+#pragma omp simd
                         for (int j = l; j < S.col; j++)
                             RES[i * RES.col + j] += F[i * F.col + k] * S[k * S.col + j];
             }
         }
 
     }
-    inline
-    friend void parallel_block_mult(matrix& F, matrix& S, matrix& RES, int block_size = 40)
+    inline      //remove '_' before 'block_size_row' and 'block_size_col' and delete declaration block_size_row and block_size_col as const
+    friend void parallel_block_mult(matrix& F, matrix& S, matrix& RES, int _block_size_row = 32, int _block_size_col = 64)
     {
         if ((F.col != S.row) || (F.row != RES.row) || (S.col != RES.col)) throw std::invalid_argument("matrices sizes should match!");
 
-        int s = F.col - (F.col % block_size);
-        int t = F.row - (F.row % block_size);
-        int l = S.col - (S.col % block_size);
+        const int block_size_row = 40;
+        const int block_size_col = 40;
+
+        int t = F.row - (F.row % block_size_row);
+        int l = S.col - (S.col % block_size_col);
+        int s = F.col - (F.col % block_size_col);
 
 #pragma omp parallel for
-        for (int i1 = 0; i1 < t; i1 += block_size)
-            for (int k1 = 0; k1 < s; k1 += block_size)
-                for (int j1 = 0; j1 < l; j1 += block_size)
-                    for (int i2 = i1; i2 < i1 + block_size; i2++)
-                        for (int k2 = k1; k2 < k1 + block_size; k2++)
+        for (int i1 = 0; i1 < t; i1 += block_size_row)
+            for (int k1 = 0; k1 < s; k1 += block_size_col)
+                for (int j1 = 0; j1 < l; j1 += block_size_col)
+                    for (int i2 = i1; i2 < i1 + block_size_row; i2++)
+                        for (int k2 = k1; k2 < k1 + block_size_col; k2++)
 #pragma omp simd
-                            for (int j2 = j1; j2 < j1 + block_size; j2++)
+                            for (int j2 = j1; j2 < j1 + block_size_col; j2++)
                                 RES[i2 * RES.col + j2] += F[i2 * F.col + k2] * S[k2 * S.col + j2];
 
-        if (S.col % block_size == 0)
+        if (S.col % block_size_col == 0)
         {
-            if (((F.row % block_size) != 0) && ((F.col % block_size) != 0))
+            if (((F.row % block_size_row) != 0) && ((F.col % block_size_col) != 0))
             {
-                int s = F.col - (F.col % block_size);
-
+                //int s = F.col - (F.col % block_size_col);
+#pragma omp parallel for
                 for (int i = 0; i < F.row; i++)
                     for (int k = s; k < F.col; k++)
+#pragma omp simd
                         for (int j = 0; j < S.col; j++)
                             RES[i * RES.col + j] += F[i * F.col + k] * S[k * S.col + j];
 
-                int t = F.row - (F.row % block_size);
-
+                //int t = F.row - (F.row % block_size_row);
+#pragma omp parallel for
                 for (int i = t; i < F.row; i++)
                     for (int k = 0; k < s; k++)
+#pragma omp simd
                         for (int j = 0; j < S.col; j++)
                             RES[i * RES.col + j] += F[i * F.col + k] * S[k * S.col + j];
             }
-            else if (((F.row % block_size) != 0) && ((F.col % block_size) == 0))
+            else if (((F.row % block_size_row) != 0) && ((F.col % block_size_col) == 0))
             {
-                int t = F.row - (F.row % block_size);
-
+                //int t = F.row - (F.row % block_size_row);
+#pragma omp parallel for
                 for (int i = t; i < F.row; i++)
                     for (int k = 0; k < F.col; k++)
+#pragma omp simd
                         for (int j = 0; j < S.col; j++)
                             RES[i * RES.col + j] += F[i * F.col + k] * S[k * S.col + j];
 
             }
-            else if (((F.row % block_size) == 0) && ((F.col % block_size) != 0))
+            else if (((F.row % block_size_row) == 0) && ((F.col % block_size_col) != 0))
             {
-                int s = F.col - (F.col % block_size);
-
+                //int s = F.col - (F.col % block_size_col);
+#pragma omp parallel for
                 for (int i = 0; i < F.row; i++)
                     for (int k = s; k < F.col; k++)
+#pragma omp simd
                         for (int j = 0; j < S.col; j++)
                             RES[i * RES.col + j] += F[i * F.col + k] * S[k * S.col + j];
 
             }
         }
-        else if (S.col % block_size != 0)
+        else if (S.col % block_size_col != 0)
         {
-            if (((F.row % block_size) != 0) && ((F.col % block_size) != 0))
+            if (((F.row % block_size_row) != 0) && ((F.col % block_size_col) != 0))
             {
-                int s = F.col - (F.col % block_size);
-
+                //int s = F.col - (F.col % block_size_col);
+#pragma omp parallel for
                 for (int i = 0; i < F.row; i++)
                     for (int k = s; k < F.col; k++)
+#pragma omp simd
                         for (int j = 0; j < S.col; j++)
                             RES[i * RES.col + j] += F[i * F.col + k] * S[k * S.col + j];
 
-                int t = F.row - (F.row % block_size);
-
+                //int t = F.row - (F.row % block_size_row);
+#pragma omp parallel for
                 for (int i = t; i < F.row; i++)
                     for (int k = 0; k < s; k++)
+#pragma omp simd
                         for (int j = 0; j < S.col; j++)
                             RES[i * RES.col + j] += F[i * F.col + k] * S[k * S.col + j];
 
-                int l = S.col - (S.col % block_size);
-
+                //int l = S.col - (S.col % block_size_col);
+#pragma omp parallel for
                 for (int i = 0; i < t; i++)
                     for (int k = 0; k < s; k++)
+#pragma omp simd
                         for (int j = l; j < S.col; j++)
                             RES[i * RES.col + j] += F[i * F.col + k] * S[k * S.col + j];
             }
-            else if (((F.row % block_size) != 0) && ((F.col % block_size) == 0))
+            else if (((F.row % block_size_row) != 0) && ((F.col % block_size_col) == 0))
             {
-                int t = F.row - (F.row % block_size);
-
+                //int t = F.row - (F.row % block_size_row);
+#pragma omp parallel for
                 for (int i = t; i < F.row; i++)
                     for (int k = 0; k < F.col; k++)
+#pragma omp simd
                         for (int j = 0; j < S.col; j++)
                             RES[i * RES.col + j] += F[i * F.col + k] * S[k * S.col + j];
 
-                int l = S.col - (S.col % block_size);
-
+                //int l = S.col - (S.col % block_size_col);
+#pragma omp parallel for
                 for (int i = 0; i < t; i++)
                     for (int k = 0; k < F.col; k++)
+#pragma omp simd
                         for (int j = l; j < S.col; j++)
                             RES[i * RES.col + j] += F[i * F.col + k] * S[k * S.col + j];
             }
-            else if (((F.row % block_size) == 0) && ((F.col % block_size) != 0))
+            else if (((F.row % block_size_row) == 0) && ((F.col % block_size_col) != 0))
             {
-                int s = F.col - (F.col % block_size);
-
+                //int s = F.col - (F.col % block_size_col);
+#pragma omp parallel for
                 for (int i = 0; i < F.row; i++)
                     for (int k = s; k < F.col; k++)
+#pragma omp simd
                         for (int j = 0; j < S.col; j++)
                             RES[i * RES.col + j] += F[i * F.col + k] * S[k * S.col + j];
 
-                int l = S.col - (S.col % block_size);
-
+                //int l = S.col - (S.col % block_size_col);
+#pragma omp parallel for
                 for (int i = 0; i < F.row; i++)
                     for (int k = 0; k < s; k++)
+#pragma omp simd
                         for (int j = l; j < S.col; j++)
                             RES[i * RES.col + j] += F[i * F.col + k] * S[k * S.col + j];
             }
-            else if (((F.row % block_size) == 0) && ((F.col % block_size) == 0))
+            else if (((F.row % block_size_row) == 0) && ((F.col % block_size_col) == 0))
             {
-                int l = S.col - (S.col % block_size);
-
+                //int l = S.col - (S.col % block_size_col);
+#pragma omp parallel for
                 for (int i = 0; i < F.row; i++)
                     for (int k = 0; k < F.col; k++)
+#pragma omp simd
                         for (int j = l; j < S.col; j++)
                             RES[i * RES.col + j] += F[i * F.col + k] * S[k * S.col + j];
             }
         }
-
     }
 };
 

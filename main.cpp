@@ -16,9 +16,11 @@ int main()
 {
 	if (flagC) std::cout << correctness(EPS) << std::endl; // 0 = correctly
 
-	int size = 4096;
+	int size = 4000;
 
 	matrix<double> A(size, size), B(size, size), C(size, size), D(size, size), F(size, size);
+
+	srand(time(NULL));
 
 	A.randomfill();
 	B.randomfill();
@@ -44,7 +46,7 @@ int main()
 	{
 		auto begin = std::chrono::steady_clock::now();
 
-		block_mult(A, B, D, 64);
+		block_mult(A, B, D, 40, 40);
 
 		auto end = std::chrono::steady_clock::now();
 
@@ -55,10 +57,11 @@ int main()
 
 	//-----------------------------------------------------------------------------------------------
 
-	if (flag2) {
+	if (flag2) 
+	{
 		auto begin = std::chrono::steady_clock::now();
 
-		parallel_block_mult(A, B, F, 64);
+		parallel_block_mult(A, B, F, 40, 40);
 
 		auto end = std::chrono::steady_clock::now();
 
