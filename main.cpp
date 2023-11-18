@@ -1,5 +1,5 @@
 #include "matrix.h"
-#include "tmp.h";
+#include "tmp.cpp";
 #include <omp.h>
 #include <time.h>
 #include <chrono>
@@ -16,7 +16,7 @@ int main()
 {
 	if (flagC) std::cout << correctness(EPS) << std::endl; // 0 = correctly
 
-	int size = 4000;
+	int size = 4000; //~2200 ms
 
 	matrix<double> A(size, size), B(size, size), C(size, size), D(size, size), F(size, size);
 

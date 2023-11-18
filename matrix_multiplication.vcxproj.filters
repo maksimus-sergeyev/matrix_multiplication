@@ -18,8 +18,8 @@
     <ClInclude Include="matrix.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="tmp.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="tmp.cpp">
+      <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

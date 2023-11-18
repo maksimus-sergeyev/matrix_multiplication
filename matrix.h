@@ -15,18 +15,18 @@ private:
 public:
     matrix(int _row = 1000, int _col = 1000) : row(_row), col(_col)
     {
-        if ((row <= 0)||(col <= 0)) throw std::exception("size should be positive!");
+        if ((row <= 0) || (col <= 0)) throw std::invalid_argument("size should be positive!");
 
         data = new T[row * col]();
     }
-    matrix(matrix& m): row(m.row), col(m.col)
+    matrix(matrix& m) : row(m.row), col(m.col)
     {
         data = new T[row * col];
 
         for (int i = 0; i < row * col; i++)
             data[i] = m[i];
     }
-    matrix(matrix&& m): row(m.row), col(m.col), data(m.data)
+    matrix(matrix&& m) : row(m.row), col(m.col), data(m.data)
     {
         m.row = m.col = 0;
         m.data = nullptr;
@@ -62,7 +62,7 @@ public:
     {
         if (this == &m) return *this;
 
-        if (row*col != m.row * m.col)
+        if (row * col != m.row * m.col)
         {
             row = m.row;
             col = m.col;
@@ -92,23 +92,33 @@ public:
 
         return *this;
     }
-    bool operator == (const matrix & m) const noexcept
+    bool operator == (const matrix& m) const noexcept
     {
-        if ((row != m.row)||(col != m.col)) return false;
+        if ((row != m.row) || (col != m.col)) return false;
 
         for (int i = 0; i < row * col; i++)
             if (data[i] != m[i]) return false;
 
         return true;
     }
-    bool operator!= (const matrix & m) const
+    bool operator!= (const matrix& m) const
     {
         return !(*this == m);
     }
-    matrix operator*(const matrix& m) 
+
+    matrix& operator+=(const matrix& m)
+    {
+        if ((row != m.row) || (col != m.col)) throw std::invalid_argument("matrices sizes should match!");
+
+        for (int i = 0; i < row*col; i++)
+                data[i] += m[i];
+
+        return *this;
+    }
+    matrix operator*(const matrix& m)
     {
         if (col != m.row) throw std::invalid_argument("matrices sizes should match!");
-        
+
         matrix res(row, m.col);
         for (int i = 0; i < row; i++)
             for (int j = 0; j < m.col; j++)
@@ -119,15 +129,25 @@ public:
     }
     matrix operator-(const matrix& m)
     {
-        if ((col != m.col)||(row != m.row)) throw std::invalid_argument("matrices sizes should match!");
+        if ((col != m.col) || (row != m.row)) throw std::invalid_argument("matrices sizes should match!");
 
         matrix res(*this);
-        for (int i = 0; i < row * col; i++)
+        for (int i = 0; i < row*col; i++)
                 res[i] -= m[i];
 
         return res;
     }
-    T norm() 
+    matrix operator+(const matrix& m)
+    {
+        if ((col != m.col) || (row != m.row)) throw std::invalid_argument("matrices sizes should match!");
+
+        matrix res(*this);
+        for (int i = 0; i < row * col; i++)
+            res[i] += m[i];
+
+        return res;
+    }
+    T norm()
     {
         T res = static_cast<T>(0);
 
@@ -137,9 +157,13 @@ public:
         return res;
     }
     inline
-    friend void mult(matrix& F, matrix& S, matrix& RES)
+        friend void mult(matrix& F, matrix& S, matrix& RES)
     {
-        if ((F.col != S.row)|| (F.row != RES.row) || (S.col != RES.col)) throw std::invalid_argument("matrices sizes should match!");
+        if ((F.col != S.row) || (F.row != RES.row) || (S.col != RES.col)) throw std::invalid_argument("matrices sizes should match!");
+        if ((&F == &RES) || (&S == &RES)) throw std::invalid_argument("RES cannot be used as argument F or S");
+
+        for (int i = 0; i < RES.row * RES.col; i++)
+                RES[i] = static_cast<T>(0);
 
         for (int i = 0; i < F.row; i++)
             for (int k = 0; k < F.col; k++)
@@ -147,9 +171,13 @@ public:
                     RES[i * RES.col + j] += F[i * F.col + k] * S[k * S.col + j];
     }
     inline      //remove '_' before 'block_size_row' and 'block_size_col' and delete declaration block_size_row and block_size_col as const
-    friend void block_mult(matrix& F, matrix& S, matrix& RES, int _block_size_row = 32, int _block_size_col = 64)
+        friend void block_mult(matrix& F, matrix& S, matrix& RES, int _block_size_row = 40, int _block_size_col = 40)
     {
         if ((F.col != S.row) || (F.row != RES.row) || (S.col != RES.col)) throw std::invalid_argument("matrices sizes should match!");
+        if ((&F == &RES) || (&S == &RES)) throw std::invalid_argument("RES cannot be used as argument F or S");
+
+        for (int i = 0; i < RES.row * RES.col; i++)
+            RES[i] = static_cast<T>(0);
 
         const int block_size_row = 40;
         const int block_size_col = 40;
@@ -196,7 +224,7 @@ public:
 #pragma omp simd
                         for (int j = 0; j < S.col; j++)
                             RES[i * RES.col + j] += F[i * F.col + k] * S[k * S.col + j];
-                
+
             }
             else if (((F.row % block_size_row) == 0) && ((F.col % block_size_col) != 0))
             {
@@ -210,7 +238,7 @@ public:
 
             }
         }
-        else if (S.col % block_size_col != 0) 
+        else if (S.col % block_size_col != 0)
         {
             if (((F.row % block_size_row) != 0) && ((F.col % block_size_col) != 0))
             {
@@ -256,7 +284,7 @@ public:
                         for (int j = l; j < S.col; j++)
                             RES[i * RES.col + j] += F[i * F.col + k] * S[k * S.col + j];
             }
-            else if (((F.row% block_size_row) == 0) && ((F.col% block_size_col) != 0))
+            else if (((F.row % block_size_row) == 0) && ((F.col % block_size_col) != 0))
             {
                 //int s = F.col - (F.col % block_size_col);
 
@@ -288,9 +316,13 @@ public:
 
     }
     inline      //remove '_' before 'block_size_row' and 'block_size_col' and delete declaration block_size_row and block_size_col as const
-    friend void parallel_block_mult(matrix& F, matrix& S, matrix& RES, int _block_size_row = 32, int _block_size_col = 64)
+        friend void parallel_block_mult(matrix& F, matrix& S, matrix& RES, int _block_size_row = 40, int _block_size_col = 40)
     {
         if ((F.col != S.row) || (F.row != RES.row) || (S.col != RES.col)) throw std::invalid_argument("matrices sizes should match!");
+        if ((&F == &RES) || (&S == &RES)) throw std::invalid_argument("RES cannot be used as argument F or S");
+
+        for (int i = 0; i < RES.row * RES.col; i++)
+            RES[i] = static_cast<T>(0);
 
         const int block_size_row = 40;
         const int block_size_col = 40;

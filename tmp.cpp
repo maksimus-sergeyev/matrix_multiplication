@@ -26,11 +26,9 @@ int correctness(double EPS) // 0 = correctly
 
 					parallel_block_mult(A, B, F, 4, 8);
 
-					if ((C - D).norm() > EPS)
-						return 1;
+					if ((C - D).norm() > EPS) return 1;
 
-					if ((C - F).norm() > EPS)
-						return 2;
+					if ((C - F).norm() > EPS) return 2;
 				}
 
 		return 0;

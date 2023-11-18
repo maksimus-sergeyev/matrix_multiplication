@@ -132,7 +132,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="matrix.h" />
-    <ClInclude Include="tmp.h" />
+    <ClInclude Include="tmp.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
