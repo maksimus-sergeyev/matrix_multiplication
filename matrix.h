@@ -23,8 +23,10 @@ public:
     {
         data = new T[row * col];
 
-        for (int i = 0; i < row * col; i++)
-            data[i] = m[i];
+#pragma omp parallel for
+        for (int i = 0; i < row; i++)
+            for (int j = 0; j < col; j++)
+                data[i * col + j] = m[i * m.col + j];
     }
     matrix(matrix&& m) : row(m.row), col(m.col), data(m.data)
     {
@@ -64,15 +66,18 @@ public:
 
         if (row * col != m.row * m.col)
         {
-            row = m.row;
-            col = m.col;
-            T* tmp = new T[row * col];
+            T* tmp = new T[m.row * m.col];
             delete[] data;
             data = tmp;
         }
 
-        for (int i = 0; i < row * col; i++)
-            data[i] = m[i];
+        row = m.row;
+        col = m.col;
+
+#pragma omp parallel for
+        for (int i = 0; i < row; i++)
+            for (int j = 0; j < col; j++)
+                data[i * col + j] = m[i * m.col + j];
 
         return *this;
     }
@@ -110,8 +115,11 @@ public:
     {
         if ((row != m.row) || (col != m.col)) throw std::invalid_argument("matrices sizes should match!");
 
-        for (int i = 0; i < row*col; i++)
-                data[i] += m[i];
+#pragma omp parallel for
+        for (int i = 0; i < row; i++)
+#pragma omp simd
+            for (int j = 0; j < col; j++)
+                data[i * col + j] += m[i * m.col + j];
 
         return *this;
     }
@@ -132,8 +140,11 @@ public:
         if ((col != m.col) || (row != m.row)) throw std::invalid_argument("matrices sizes should match!");
 
         matrix res(*this);
-        for (int i = 0; i < row*col; i++)
-                res[i] -= m[i];
+#pragma omp parallel for
+        for (int i = 0; i < row; i++)
+#pragma omp simd
+            for (int j = 0; j < col; j++)
+                res[i * col + j] -= m[i * m.col + j];
 
         return res;
     }
@@ -142,8 +153,11 @@ public:
         if ((col != m.col) || (row != m.row)) throw std::invalid_argument("matrices sizes should match!");
 
         matrix res(*this);
-        for (int i = 0; i < row * col; i++)
-            res[i] += m[i];
+#pragma omp parallel for
+        for (int i = 0; i < row; i++)
+#pragma omp simd
+            for (int j = 0; j < col; j++)
+                res[i * col + j] += m[i * m.col + j];
 
         return res;
     }
@@ -162,11 +176,31 @@ public:
         if ((F.col != S.row) || (F.row != RES.row) || (S.col != RES.col)) throw std::invalid_argument("matrices sizes should match!");
         if ((&F == &RES) || (&S == &RES)) throw std::invalid_argument("RES cannot be used as argument F or S");
 
-        for (int i = 0; i < RES.row * RES.col; i++)
-                RES[i] = static_cast<T>(0);
+        for (int i = 0; i < RES.row; i++)
+            for (int j = 0; j < RES.col; j++)
+                RES[i * RES.col + j] = static_cast<T>(0);
 
         for (int i = 0; i < F.row; i++)
             for (int k = 0; k < F.col; k++)
+#pragma omp simd
+                for (int j = 0; j < S.col; j++)
+                    RES[i * RES.col + j] += F[i * F.col + k] * S[k * S.col + j];
+    }
+    inline
+        friend void parallel_mult(matrix& F, matrix& S, matrix& RES)
+    {
+        if ((F.col != S.row) || (F.row != RES.row) || (S.col != RES.col)) throw std::invalid_argument("matrices sizes should match!");
+        if ((&F == &RES) || (&S == &RES)) throw std::invalid_argument("RES cannot be used as argument F or S");
+
+#pragma omp parallel for
+        for (int i = 0; i < RES.row; i++)
+            for (int j = 0; j < RES.col; j++)
+                RES[i * RES.col + j] = static_cast<T>(0);
+
+#pragma omp parallel for
+        for (int i = 0; i < F.row; i++)
+            for (int k = 0; k < F.col; k++)
+#pragma omp simd
                 for (int j = 0; j < S.col; j++)
                     RES[i * RES.col + j] += F[i * F.col + k] * S[k * S.col + j];
     }
@@ -176,8 +210,9 @@ public:
         if ((F.col != S.row) || (F.row != RES.row) || (S.col != RES.col)) throw std::invalid_argument("matrices sizes should match!");
         if ((&F == &RES) || (&S == &RES)) throw std::invalid_argument("RES cannot be used as argument F or S");
 
-        for (int i = 0; i < RES.row * RES.col; i++)
-            RES[i] = static_cast<T>(0);
+        for (int i = 0; i < RES.row; i++)
+            for (int j = 0; j < RES.col; j++)
+                RES[i * RES.col + j] = static_cast<T>(0);
 
         const int block_size_row = 40;
         const int block_size_col = 40;
@@ -321,8 +356,10 @@ public:
         if ((F.col != S.row) || (F.row != RES.row) || (S.col != RES.col)) throw std::invalid_argument("matrices sizes should match!");
         if ((&F == &RES) || (&S == &RES)) throw std::invalid_argument("RES cannot be used as argument F or S");
 
-        for (int i = 0; i < RES.row * RES.col; i++)
-            RES[i] = static_cast<T>(0);
+#pragma omp parallel for
+        for (int i = 0; i < RES.row; i++)
+            for (int j = 0; j < RES.col; j++)
+                RES[i * RES.col + j] = static_cast<T>(0);
 
         const int block_size_row = 40;
         const int block_size_col = 40;

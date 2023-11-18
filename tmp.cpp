@@ -15,20 +15,28 @@ int correctness(double EPS) // 0 = correctly
 
 					int row2 = col1;
 
-					matrix<double> A(row1, col1), B(row2, col2), C(row1, col2), D(row1, col2), F(row1, col2);
+					matrix<double> A(row1, col1), B(row2, col2), C(row1, col2), D(row1, col2), E(row1, col2), F(row1, col2), G(row1, col2);
 
 					A.randomfill();
 					B.randomfill();
 
 					C = A * B;
 
-					block_mult(A, B, D, 4, 8);
+					mult(A, B, D);
 
-					parallel_block_mult(A, B, F, 4, 8);
+					parallel_mult(A, B, E);
+
+					block_mult(A, B, F, 4, 8);
+
+					parallel_block_mult(A, B, G, 4, 8);
 
 					if ((C - D).norm() > EPS) return 1;
 
-					if ((C - F).norm() > EPS) return 2;
+					if ((C - E).norm() > EPS) return 2;
+
+					if ((C - F).norm() > EPS) return 3;
+
+					if ((C - G).norm() > EPS) return 4;
 				}
 
 		return 0;
