@@ -205,7 +205,7 @@ public:
                     RES[i * RES.col + j] += F[i * F.col + k] * S[k * S.col + j];
     }
     inline      //remove '_' before 'block_size_row' and 'block_size_col' and delete declaration block_size_row and block_size_col as const
-        friend void block_mult(matrix& F, matrix& S, matrix& RES, int _block_size_row = 40, int _block_size_col = 40)
+        friend void block_mult(matrix& F, matrix& S, matrix& RES, int block_size_row = 64, int block_size_col = 64)
     {
         if ((F.col != S.row) || (F.row != RES.row) || (S.col != RES.col)) throw std::invalid_argument("matrices sizes should match!");
         if ((&F == &RES) || (&S == &RES)) throw std::invalid_argument("RES cannot be used as argument F or S");
@@ -214,13 +214,14 @@ public:
             for (int j = 0; j < RES.col; j++)
                 RES[i * RES.col + j] = static_cast<T>(0);
 
-        const int block_size_row = 40;
-        const int block_size_col = 40;
+        //const int block_size_row = 64;
+        //const int block_size_col = 64;
 
         int t = F.row - (F.row % block_size_row);
         int l = S.col - (S.col % block_size_col);
         int s = F.col - (F.col % block_size_col);
 
+        
         for (int i1 = 0; i1 < t; i1 += block_size_row)
             for (int k1 = 0; k1 < s; k1 += block_size_col)
                 for (int j1 = 0; j1 < l; j1 += block_size_col)
@@ -351,7 +352,7 @@ public:
 
     }
     inline      //remove '_' before 'block_size_row' and 'block_size_col' and delete declaration block_size_row and block_size_col as const
-        friend void parallel_block_mult(matrix& F, matrix& S, matrix& RES, int _block_size_row = 40, int _block_size_col = 40)
+        friend void parallel_block_mult(matrix& F, matrix& S, matrix& RES, int block_size_row = 64, int block_size_col = 64)
     {
         if ((F.col != S.row) || (F.row != RES.row) || (S.col != RES.col)) throw std::invalid_argument("matrices sizes should match!");
         if ((&F == &RES) || (&S == &RES)) throw std::invalid_argument("RES cannot be used as argument F or S");
@@ -361,8 +362,8 @@ public:
             for (int j = 0; j < RES.col; j++)
                 RES[i * RES.col + j] = static_cast<T>(0);
 
-        const int block_size_row = 40;
-        const int block_size_col = 40;
+        //const int block_size_row = 64;
+        //const int block_size_col = 64;
 
         int t = F.row - (F.row % block_size_row);
         int l = S.col - (S.col % block_size_col);
