@@ -21,7 +21,7 @@ CPU:
 ICC
 options: /permissive /GS /Qopenmp /Qftz /W3 /QxHost /Gy /Zc:wchar_t /Zi /O3 /Fd"x64\Release\vc143.pdb" /Zc:inline /Quse-intel-optimized-headers /D "NDEBUG" /D "_CONSOLE" /D "_UNICODE" /D "UNICODE" /Qipo /Zc:forScope /Oi /MD /FC /Fa"x64\Release\" /EHsc /nologo /Qparallel /Fo"x64\Release\" /Ot /Fp"x64\Release\matrix_multiplication.pch" 
 
-size = 4096;
+size = 4000;
 The time of 'i, k, j multiplication': 21893 ms
 The time of 'parallel i, k, j multiplication': 4456 ms
 The time of 'block multiplication': 8502 ms
@@ -40,7 +40,7 @@ int main()
 {
 	if (flagC) std::cout << correctness(EPS) << std::endl; // 0 = correctly
 
-	int size = 8192;
+	int size = 4000;
 
 	matrix<double> A(size, size), B(size, size), C(size, size);
 
