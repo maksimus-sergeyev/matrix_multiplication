@@ -40,7 +40,7 @@ int main()
 {
 	if (flagC) std::cout << correctness(EPS) << std::endl; // 0 = correctly
 
-	int size = 4000;
+	int size = 8000;
 
 	matrix<double> A(size, size), B(size, size), C(size, size);
 
