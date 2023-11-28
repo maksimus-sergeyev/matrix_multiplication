@@ -348,7 +348,7 @@ public:
 
     }
     inline
-        friend void parallel_block_mult(matrix& F, matrix& S, matrix& RES, int block_size_row = 64, int block_size_col = 32)
+        friend void parallel_block_mult(matrix& F, matrix& S, matrix& RES, int block_size_row = 64, int block_size_col = 64)
     {
         if ((F.col != S.row) || (F.row != RES.row) || (S.col != RES.col)) throw std::invalid_argument("matrices sizes should match!");
         if ((&F == &RES) || (&S == &RES)) throw std::invalid_argument("RES cannot be used as argument F or S");
@@ -360,10 +360,12 @@ public:
         int l = S.col - (S.col % block_size_row);// j
         int s = F.col - (F.col % block_size_col);// k
 
-#pragma omp parallel for collapse(2)
+        //optimal: 64 x 64 ???????
+
+#pragma omp parallel for
         for (int i1 = 0; i1 < t; i1 += block_size_row)
-            for (int j1 = 0; j1 < l; j1 += block_size_row)
-                for (int k1 = 0; k1 < s; k1 += block_size_col)
+            for (int k1 = 0; k1 < s; k1 += block_size_col)
+                for (int j1 = 0; j1 < l; j1 += block_size_row)
                     for (int i2 = i1; i2 < i1 + block_size_row; i2++)
                         for (int k2 = k1; k2 < k1 + block_size_col; k2++)
 #pragma omp simd
