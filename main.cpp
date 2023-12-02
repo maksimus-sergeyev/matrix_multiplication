@@ -27,15 +27,17 @@ const bool flagC = 0; // checking for correctness
 const bool flag0 = 0; // i, k, j multiplication
 const bool flag1 = 0; // parallel i, k, j multiplication
 const bool flag2 = 0; // block multiplication
-const bool flag3 = 1; // parallel block multiplication
+const bool flag3 = 0; // parallel block multiplication
+const bool flag4 = 1; // parallel block multiplication 2 (with trans. block 2nd matrix)
 
 const double EPS = 0.001;
 
 int main() 
 {
+
 	if (flagC) std::cout << correctness(EPS) << std::endl; // 0 = correctly
 
-	int size = 8192;
+	int size = 16384;
 
 	matrix<double> A(size, size), B(size, size), C(size, size);
 
@@ -111,5 +113,23 @@ int main()
 		auto elapsed_ms = std::chrono::duration_cast<std::chrono::milliseconds>(end - begin);
 
 		std::cout << "The time of 'parallel block multiplication': " << elapsed_ms.count() << " ms\n";
+	}
+
+	//-----------------------------------------------------------------------------------------------
+
+	if (flag4)
+	{
+		A.randomfill();
+		B.randomfill();
+
+		auto begin = std::chrono::steady_clock::now();
+
+		parallel_block_mult2(A, B, C);
+
+		auto end = std::chrono::steady_clock::now();
+
+		auto elapsed_ms = std::chrono::duration_cast<std::chrono::milliseconds>(end - begin);
+
+		std::cout << "The time of 'parallel block multiplication2': " << elapsed_ms.count() << " ms\n";
 	}
 }
