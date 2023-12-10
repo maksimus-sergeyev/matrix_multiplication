@@ -1,9 +1,10 @@
 #include "matrix.h"
-#include "tmp.cpp";
+#include "tmp.cpp"
 #include <omp.h>
 #include <time.h>
 #include <chrono>
 #include <iomanip> 
+#include <thread>
 
 /*
 CPU:
@@ -28,16 +29,15 @@ const bool flag0 = 0; // i, k, j multiplication
 const bool flag1 = 0; // parallel i, k, j multiplication
 const bool flag2 = 0; // block multiplication
 const bool flag3 = 0; // parallel block multiplication
-const bool flag4 = 1; // parallel block multiplication 2 (with trans. block 2nd matrix)
+const bool flag4 = 1; // parallel block multiplication2 (with trans. block 2nd matrix)
+const bool flag5 = 1; // parallel block multiplication3 (with subblock)
 
 const double EPS = 0.001;
 
 int main() 
-{
-
-	if (flagC) std::cout << correctness(EPS) << std::endl; // 0 = correctly
-
-	int size = 16384;
+{						//???
+	int size = 8192;	//size = 8192 ~ 8900 ms ( parallel block multiplication2 or parallel block multiplication3)
+						//mkl dgemm() ~ 3100 ms for same size
 
 	matrix<double> A(size, size), B(size, size), C(size, size);
 
@@ -47,6 +47,8 @@ int main()
 
 	if (flag0) 
 	{
+		if (flagC) std::cout << mult_correctness(EPS) << std::endl;
+
 		A.randomfill();
 		B.randomfill();
 
@@ -65,6 +67,8 @@ int main()
 
 	if (flag1)
 	{
+		if (flagC) std::cout << parallel_mult_correctness(EPS) << std::endl;
+
 		A.randomfill();
 		B.randomfill();
 
@@ -83,6 +87,8 @@ int main()
 
 	if (flag2) 
 	{
+		if (flagC) std::cout << block_mult_correctness(EPS) << std::endl;
+
 		A.randomfill();
 		B.randomfill();
 
@@ -101,6 +107,8 @@ int main()
 
 	if (flag3) 
 	{
+		if (flagC) std::cout << parallel_block_mult_correctness(EPS) << std::endl;
+
 		A.randomfill();
 		B.randomfill();
 
@@ -119,6 +127,8 @@ int main()
 
 	if (flag4)
 	{
+		if (flagC) std::cout << parallel_block_mult2_correctness(EPS) << std::endl;
+
 		A.randomfill();
 		B.randomfill();
 
@@ -132,4 +142,43 @@ int main()
 
 		std::cout << "The time of 'parallel block multiplication2': " << elapsed_ms.count() << " ms\n";
 	}
+
+	//-----------------------------------------------------------------------------------------------
+	
+	if (flag5)
+	{
+		if (flagC) std::cout << parallel_block_mult3_correctness(EPS) << std::endl;
+
+		A.randomfill();
+		B.randomfill();
+
+		auto begin = std::chrono::steady_clock::now();
+
+		parallel_block_mult3(A, B, C);
+
+		auto end = std::chrono::steady_clock::now();
+
+		auto elapsed_ms = std::chrono::duration_cast<std::chrono::milliseconds>(end - begin);
+
+		std::cout << "The time of 'parallel block multiplication3': " << elapsed_ms.count() << " ms\n";
+
+	}
+
+	/*if (1)
+	{
+		if (flagC) std::cout << parallel_block_mult3_correctness(EPS) << std::endl;
+
+		A.randomfill();
+		B.randomfill();
+
+		auto begin = std::chrono::steady_clock::now();
+
+		parallel_block_mult4(A, B, C);
+
+		auto end = std::chrono::steady_clock::now();
+
+		auto elapsed_ms = std::chrono::duration_cast<std::chrono::milliseconds>(end - begin);
+
+		std::cout << "The time of 'parallel block multiplication4': " << elapsed_ms.count() << " ms\n";
+	}*/
 }
