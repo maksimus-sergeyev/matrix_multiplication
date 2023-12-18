@@ -6,6 +6,7 @@
 const double MAXM = 1000;
 const double MINM = -1000;
 
+// T - Fundamental type
 template <typename T>
 class matrix
 {
@@ -20,13 +21,13 @@ public:
 
         data = new T[row * col]();
     }
-    matrix(matrix& m) : row(m.row), col(m.col)
+    matrix(const matrix& m) : row(m.row), col(m.col)
     {
         data = new T[row * col];
 
         std::memcpy(data, m.data, row * col * sizeof(T));
     }
-    matrix(matrix&& m) : row(m.row), col(m.col), data(m.data)
+    matrix(matrix&& m) noexcept: row(m.row), col(m.col), data(m.data)
     {
         m.row = m.col = 0;
         m.data = nullptr;
@@ -45,7 +46,7 @@ public:
     {
         return data[i];
     }
-    void randomfill()noexcept
+    void randomfill() noexcept
     {
         for (int i = 0; i < row * col; i++)
             data[i] = static_cast<T>((static_cast<double>(rand()) / static_cast<double>(RAND_MAX)) * (MAXM - MINM) + MINM);
@@ -80,17 +81,11 @@ public:
     {
         if (this == &m) return *this;
 
-        delete[] data;
+        std::swap(data, m.data);
 
-        data = m.data;
+        std::swap(row, m.row);
 
-        row = m.row;
-
-        col = m.col;
-
-        m.data = nullptr;
-
-        m.row = m.col = 0;
+        std::swap(col, m.col);
 
         return *this;
     }
@@ -103,7 +98,7 @@ public:
 
         return true;
     }
-    bool operator!= (const matrix& m) const
+    bool operator!= (const matrix& m) const noexcept
     {
         return !(*this == m);
     }
@@ -158,7 +153,7 @@ public:
 
         return res;
     }
-    T norm()
+    T norm() const noexcept
     {
         T res = static_cast<T>(0);
 
