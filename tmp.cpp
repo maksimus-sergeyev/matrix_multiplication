@@ -439,3 +439,171 @@ bool parallel_block_mult4_correctness(double EPS)
 	return true;
 
 }
+
+bool parallel_block_mult5_correctness(double EPS)
+{
+	const int sz = 1024;
+
+	srand(time(NULL));
+
+	for (int row1 = 1; row1 <= 10; row1++)
+		for (int col1 = 1; col1 <= 10; col1++)
+			for (int col2 = 1; col2 <= 10; col2++)
+			{
+				int row2 = col1;
+
+				matrix<double> A(row1, col1), B(row2, col2), C(row1, col2), D(row1, col2);
+
+				A.randomfill();
+				B.randomfill();
+				C.randomfill();
+				D.randomfill();
+
+				parallel_mult(A, B, C);
+
+				parallel_block_mult5(A, B, D);
+
+				if ((D - C).norm() > EPS) return false;
+
+			}
+
+	//std::cout << "1\n";
+
+	for (int row1 = 256; row1 <= sz; row1 *= 2)
+		for (int col1 = 256; col1 <= sz; col1 *= 2)
+			for (int col2 = 256; col2 <= sz; col2 *= 2)
+			{
+				//std::cout << "2\n";
+
+				int row2 = col1;
+
+				matrix<double> A(row1, col1), B(row2, col2), C(row1, col2), D(row1, col2);
+
+				A.randomfill();
+				B.randomfill();
+				C.randomfill();
+				D.randomfill();
+
+				parallel_mult(A, B, C);
+
+				//std::cout << "3\n";
+
+				parallel_block_mult5(A, B, D);
+
+				if ((D - C).norm() > EPS) return false;
+
+			}
+
+	//std::cout << "1\n";
+
+	for (int row1 = 200; row1 <= sz; row1 *= 2)
+		for (int col1 = 200; col1 <= sz; col1 *= 2)
+			for (int col2 = 200; col2 <= sz; col2 *= 2)
+			{
+
+				int row2 = col1;
+
+				matrix<double> A(row1, col1), B(row2, col2), C(row1, col2), D(row1, col2);
+
+				A.randomfill();
+				B.randomfill();
+				C.randomfill();
+				D.randomfill();
+
+				parallel_mult(A, B, C);
+
+				parallel_block_mult5(A, B, D);
+
+				if ((D - C).norm() > EPS) return false;
+
+			}
+
+	//std::cout << "1\n";
+
+	return true;
+
+}
+
+bool parallel_block_mult6_correctness(double EPS)
+{
+	const int sz = 1024;
+
+	srand(time(NULL));
+
+	for (int row1 = 1; row1 <= 10; row1++)
+		for (int col1 = 1; col1 <= 10; col1++)
+			for (int col2 = 1; col2 <= 10; col2++)
+			{
+				int row2 = col1;
+
+				matrix<double> A(row1, col1), B(row2, col2), C(row1, col2), D(row1, col2);
+
+				A.randomfill();
+				B.randomfill();
+				C.randomfill();
+				D.randomfill();
+
+				parallel_mult(A, B, C);
+
+				parallel_block_mult6(A, B, D);
+
+				if ((D - C).norm() > EPS) return false;
+
+			}
+
+	//std::cout << "1\n";
+
+	for (int row1 = 256; row1 <= sz; row1 *= 2)
+		for (int col1 = 256; col1 <= sz; col1 *= 2)
+			for (int col2 = 256; col2 <= sz; col2 *= 2)
+			{
+				//std::cout << "2\n";
+
+				int row2 = col1;
+
+				matrix<double> A(row1, col1), B(row2, col2), C(row1, col2), D(row1, col2);
+
+				A.randomfill();
+				B.randomfill();
+				C.randomfill();
+				D.randomfill();
+
+				parallel_mult(A, B, C);
+
+				//std::cout << "3\n";
+
+				parallel_block_mult6(A, B, D);
+
+				if ((D - C).norm() > EPS) return false;
+
+			}
+
+	//std::cout << "1\n";
+
+	for (int row1 = 200; row1 <= sz; row1 *= 2)
+		for (int col1 = 200; col1 <= sz; col1 *= 2)
+			for (int col2 = 200; col2 <= sz; col2 *= 2)
+			{
+
+				int row2 = col1;
+
+				matrix<double> A(row1, col1), B(row2, col2), C(row1, col2), D(row1, col2);
+
+				A.randomfill();
+				B.randomfill();
+				C.randomfill();
+				D.randomfill();
+
+				parallel_mult(A, B, C);
+
+				parallel_block_mult6(A, B, D);
+
+				if ((D - C).norm() > EPS) return false;
+
+			}
+
+	//std::cout << "1\n";
+
+	return true;
+
+}

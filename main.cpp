@@ -24,20 +24,23 @@ options: /GS /TP /Qiopenmp /W3 /QxHost /Gy /Zc:wchar_t /Zi /O3 /D "NDEBUG" /D "_
 
 */
 
-const bool flagC = 0; // checking for correctness
+const bool flagC = 1; // checking for correctness
 const bool flag0 = 0; // i, k, j multiplication
 const bool flag1 = 0; // parallel i, k, j multiplication
 const bool flag2 = 0; // block multiplication
 const bool flag3 = 0; // parallel block multiplication
-const bool flag4 = 1; // parallel block multiplication2 (with trans. block 2nd matrix)				<- the fastest
+const bool flag4 = 0; // parallel block multiplication2 (with trans. block 2nd matrix)				<- the fastest
 const bool flag5 = 0; // parallel block multiplication3 (with subblock)
 const bool flag6 = 0; // parallel block multiplication4 (with trans. block 2nd matrix && subblock)
+const bool flag7 = 0; // parallel block multiplication5 (parallel block multiplication3 with intrinsics)
+const bool flag8 = 1; // 6300ms 
 
 const double EPS = 0.001;
 
 int main() 
-{																					   //???15000?									//???15000?
-	int size = 8192;	//size = 8192 ~ 6900 ms (parallel block multiplication2) or ~ 15000 ms (parallel block multiplication3) or ~ 16000 ms (parallel block multiplication4)
+						//size = 8192 ~ 7000 ms (parallel block multiplication5 )
+{										//7700?										   									
+	int size = 8192;	//size = 8192 ~ 6900 ms (parallel block multiplication2) or ~ 14600 ms (parallel block multiplication3) or ~ 14600 ms (parallel block multiplication4)
 						//mkl dgemm() ~ 3100 ms for same size
 
 	matrix<double> A(size, size), B(size, size), C(size, size);
@@ -181,5 +184,41 @@ int main()
 		auto elapsed_ms = std::chrono::duration_cast<std::chrono::milliseconds>(end - begin);
 
 		std::cout << "The time of 'parallel block multiplication4': " << elapsed_ms.count() << " ms\n";
+	}
+
+	if (flag7)
+	{
+		if (flagC) std::cout << parallel_block_mult5_correctness(EPS) << std::endl;
+
+		A.randomfill();
+		B.randomfill();
+
+		auto begin = std::chrono::steady_clock::now();
+
+		parallel_block_mult5(A, B, C);
+
+		auto end = std::chrono::steady_clock::now();
+
+		auto elapsed_ms = std::chrono::duration_cast<std::chrono::milliseconds>(end - begin);
+
+		std::cout << "The time of 'parallel block multiplication5': " << elapsed_ms.count() << " ms\n";
+	}
+
+	if (flag8)
+	{
+		if (flagC) std::cout << parallel_block_mult6_correctness(EPS) << std::endl;
+
+		A.randomfill();
+		B.randomfill();
+
+		auto begin = std::chrono::steady_clock::now();
+
+		parallel_block_mult6(A, B, C);
+
+		auto end = std::chrono::steady_clock::now();
+
+		auto elapsed_ms = std::chrono::duration_cast<std::chrono::milliseconds>(end - begin);
+
+		std::cout << "The time of 'parallel block multiplication6': " << elapsed_ms.count() << " ms\n";
 	}
 }
