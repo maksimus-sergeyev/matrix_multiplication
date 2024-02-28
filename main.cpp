@@ -5,6 +5,7 @@
 #include <chrono>
 #include <iomanip> 
 #include <thread>
+//#include "mkl.h"
 
 /*
 CPU:
@@ -24,24 +25,38 @@ options: /GS /TP /Qiopenmp /W3 /QxHost /Gy /Zc:wchar_t /Zi /O3 /D "NDEBUG" /D "_
 
 */
 
-const bool flagC = 1; // checking for correctness
+const bool flagC = 0; // checking for correctness
 const bool flag0 = 0; // i, k, j multiplication
 const bool flag1 = 0; // parallel i, k, j multiplication
 const bool flag2 = 0; // block multiplication
 const bool flag3 = 0; // parallel block multiplication
-const bool flag4 = 0; // parallel block multiplication2 (with trans. block 2nd matrix)				<- the fastest
-const bool flag5 = 0; // parallel block multiplication3 (with subblock)
-const bool flag6 = 0; // parallel block multiplication4 (with trans. block 2nd matrix && subblock)
-const bool flag7 = 0; // parallel block multiplication5 (parallel block multiplication3 with intrinsics)
-const bool flag8 = 1; // 6300ms 
+
+const bool flag4 = 0;	// parallel block multiplication2 (with trans. block 2nd matrix)					<- was fastest
+						//size = 8192;  best_time = 6900 ms; avg_time = 7700 ms; 
+
+const bool flag5 = 0;	// parallel block multiplication3 (with subblock)
+						//size = 8192;  best_time = 13000 ms; avg_time = 14600 ms;
+
+const bool flag6 = 0;	// parallel block multiplication4 (with trans. block 2nd matrix && subblock)
+						//size = 8192;	best_time = 13000 ms; avg_time = 14600 ms;
+
+const bool flag7 = 1;	// parallel block multiplication5 (parallel block multiplication3 with intrinsics)	<- the fastest 
+						//size = 8352;	best_time = 5000 ms; avg_time = 5400 ms;  
+						//size = 8054;  best_time = 4200 ms; avg_time = 4500 ms;
+			//(size divisible by block_size)											//previos vers: size = 8192; best_time = 6300 ms;
+																			
+//const bool flag8 = 0;	//MKL cblas_dgemm(1, 0) = (1 * A * B + 0 * C) = A * B
+						//size = 8192; best_time = 3100 ms; avg_time = 3500 ms;
+						//size = 8054; best_time = 2950 ms; avg_time = 3300 ms;
+						//size = 8352; best_time = 3300 ms; avg_time = 3600 ms;
+
 
 const double EPS = 0.001;
 
 int main() 
-						//size = 8192 ~ 7000 ms (parallel block multiplication5 )
-{										//7700?										   									
-	int size = 8192;	//size = 8192 ~ 6900 ms (parallel block multiplication2) or ~ 14600 ms (parallel block multiplication3) or ~ 14600 ms (parallel block multiplication4)
-						//mkl dgemm() ~ 3100 ms for same size
+{					
+	int size = 8054;
+	
 
 	matrix<double> A(size, size), B(size, size), C(size, size);
 
@@ -203,22 +218,54 @@ int main()
 
 		std::cout << "The time of 'parallel block multiplication5': " << elapsed_ms.count() << " ms\n";
 	}
-
+	/*
 	if (flag8)
 	{
-		if (flagC) std::cout << parallel_block_mult6_correctness(EPS) << std::endl;
+		srand(time(NULL));
 
-		A.randomfill();
-		B.randomfill();
+		double* a, * b, * c, alpha, beta;
+		MKL_INT m, n, k;
+		MKL_INT sizea, sizeb, sizec;
+
+		alpha = 1.0;
+		beta = 0.0;
+
+		m = size;
+		n = size;
+		k = size;
+
+		sizea = m * k;
+		sizeb = k * n;
+		sizec = m * n;
+
+		a = (double*)mkl_malloc(sizea * sizeof(double), 64);
+		b = (double*)mkl_malloc(sizeb * sizeof(double), 64);
+		c = (double*)mkl_malloc(sizec * sizeof(double), 64);
+
+		for (MKL_INT i = 0; i < sizea; i++)
+			a[i] = rand() / (double)RAND_MAX - .5;
+
+		for (MKL_INT i = 0; i < sizeb; i++)
+			b[i] = rand() / (double)RAND_MAX - .5;
+
+		for (MKL_INT i = 0; i < sizec; i++)
+			c[i] = 0;
 
 		auto begin = std::chrono::steady_clock::now();
 
-		parallel_block_mult6(A, B, C);
-
+		cblas_dgemm(CblasRowMajor, CblasNoTrans, CblasNoTrans, m, n, k, alpha, a, k, b, n, beta, c, n);
+		
 		auto end = std::chrono::steady_clock::now();
 
 		auto elapsed_ms = std::chrono::duration_cast<std::chrono::milliseconds>(end - begin);
 
-		std::cout << "The time of 'parallel block multiplication6': " << elapsed_ms.count() << " ms\n";
+		std::cout << "The time of 'mkl dgemm(1, 0)': " << elapsed_ms.count() << " ms\n";
+
+		mkl_free(a);
+		mkl_free(b);
+		mkl_free(c);
 	}
+	*/
+
+	return 0;
 }
