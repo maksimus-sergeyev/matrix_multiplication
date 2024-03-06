@@ -5,7 +5,7 @@
 #include <chrono>
 #include <iomanip> 
 #include <thread>
-//#include "mkl.h"
+#include "mkl.h"
 
 /*
 CPU:
@@ -41,28 +41,30 @@ const bool flag6 = 0;	// parallel block multiplication4 (with trans. block 2nd m
 						//size = 8192;	best_time = 13000 ms; avg_time = 14600 ms;
 
 const bool flag7 = 1;	// parallel block multiplication5 (parallel block multiplication3 with intrinsics)	<- the fastest 
-						//size = 8352;	best_time = 5000 ms; avg_time = 5400 ms;  
-						//size = 8054;  best_time = 4200 ms; avg_time = 4500 ms;
-			//(size divisible by block_size)											//previos vers: size = 8192; best_time = 6300 ms;
+						//size = 8256;	best_time = 3750 ms; avg_time = 4400 ms;  
+						//size = 8064;  best_time = 4000 ms; avg_time = 4300 ms;
+						 //(sizes divisible by block_size)
+						  
+						//size = 8192 	best_time = 9300 ms; avg_time = 9800 ms;											
+														
 																			
-//const bool flag8 = 0;	//MKL cblas_dgemm(1, 0) = (1 * A * B + 0 * C) = A * B
+const bool flag8 = 0;	//MKL cblas_dgemm(1, 0) = (1 * A * B + 0 * C) = A * B
+						//size = 8256; best_time = 3300 ms; avg_time = 3600 ms;
+						//size = 8064; best_time = 2950 ms; avg_time = 3300 ms;
 						//size = 8192; best_time = 3100 ms; avg_time = 3500 ms;
-						//size = 8054; best_time = 2950 ms; avg_time = 3300 ms;
-						//size = 8352; best_time = 3300 ms; avg_time = 3600 ms;
+						
+						
 
 
 const double EPS = 0.001;
 
 int main() 
-{					
-	int size = 8054;
+{
+	int size = 8256;
 	
-
 	matrix<double> A(size, size), B(size, size), C(size, size);
 
 	srand(time(NULL));
-
-	//-----------------------------------------------------------------------------------------------
 
 	if (flag0) 
 	{
@@ -82,8 +84,6 @@ int main()
 		std::cout << "The time of 'i, k, j multiplication': " << elapsed_ms.count() << " ms\n";
 	}
 
-	//-----------------------------------------------------------------------------------------------
-
 	if (flag1)
 	{
 		if (flagC) std::cout << parallel_mult_correctness(EPS) << std::endl;
@@ -101,8 +101,6 @@ int main()
 
 		std::cout << "The time of 'parallel i, k, j multiplication': " << elapsed_ms.count() << " ms\n";
 	}
-
-	//-----------------------------------------------------------------------------------------------
 
 	if (flag2) 
 	{
@@ -122,8 +120,6 @@ int main()
 		std::cout << "The time of 'block multiplication': " << elapsed_ms.count() << " ms\n";
 	}
 
-	//-----------------------------------------------------------------------------------------------
-
 	if (flag3) 
 	{
 		if (flagC) std::cout << parallel_block_mult_correctness(EPS) << std::endl;
@@ -142,8 +138,6 @@ int main()
 		std::cout << "The time of 'parallel block multiplication': " << elapsed_ms.count() << " ms\n";
 	}
 
-	//-----------------------------------------------------------------------------------------------
-
 	if (flag4)
 	{
 		if (flagC) std::cout << parallel_block_mult2_correctness(EPS) << std::endl;
@@ -161,8 +155,6 @@ int main()
 
 		std::cout << "The time of 'parallel block multiplication2': " << elapsed_ms.count() << " ms\n";
 	}
-
-	//-----------------------------------------------------------------------------------------------
 	
 	if (flag5)
 	{
@@ -218,7 +210,7 @@ int main()
 
 		std::cout << "The time of 'parallel block multiplication5': " << elapsed_ms.count() << " ms\n";
 	}
-	/*
+	
 	if (flag8)
 	{
 		srand(time(NULL));
@@ -265,7 +257,7 @@ int main()
 		mkl_free(b);
 		mkl_free(c);
 	}
-	*/
+	
 
 	return 0;
 }

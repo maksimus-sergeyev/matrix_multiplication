@@ -153,20 +153,11 @@ public:
     }
     T norm() const noexcept
     {
-        T res = static_cast<T>(0);
+        T res{};
 
-        int sz = std::thread::hardware_concurrency();
-
-        T tmp[sz];
-
-        std::memset(tmp, 0, sz * sizeof(T));
-
-#pragma omp parallel for
+#pragma omp parallel for reduction(+:res)
         for (int i = 0; i < row * col; i++)
-            tmp[omp_get_thread_num()] += data[i] * data[i];
-
-        for (int i = 0; i < sz; i++)
-            res += tmp[i];
+            res += data[i] * data[i];
 
         return res;
     }
@@ -175,8 +166,6 @@ public:
     {
         if ((F.col != S.row) || (F.row != RES.row) || (S.col != RES.col)) throw std::invalid_argument("matrices sizes should match!");
         if ((&F == &RES) || (&S == &RES)) throw std::invalid_argument("RES cannot be used as argument F or S");
-
-        std::memset(RES.data, 0, RES.row * RES.col * sizeof(T));
 
         for (int i = 0; i < F.row; i++)
             for (int k = 0; k < F.col; k++)
@@ -193,8 +182,6 @@ public:
         //may return 0 when not able to detect
         const auto processor_count = std::thread::hardware_concurrency();// / 2;
 
-        std::memset(RES.data, 0, RES.row * RES.col * sizeof(T));
-
 #pragma omp parallel for num_threads(processor_count)
         for (int i = 0; i < F.row; i++)
             for (int k = 0; k < F.col; k++)
@@ -209,8 +196,6 @@ public:
         if ((&F == &RES) || (&S == &RES)) throw std::invalid_argument("RES cannot be used as argument F or S");
         
         const int block_size_row = 64, block_size_col = 64;
-
-        std::memset(RES.data, 0, RES.row * RES.col * sizeof(T));
 
         int t = F.row - (F.row % block_size_row);// i
         int l = S.col - (S.col % block_size_row);// j
@@ -356,8 +341,6 @@ public:
 
         const auto processor_count = std::thread::hardware_concurrency();// / 2;
 
-        std::memset(RES.data, 0, RES.row * RES.col * sizeof(T) );
-
         int t = F.row - (F.row % block_size_row);// i
         int l = S.col - (S.col % block_size_row);// j
         int s = F.col - (F.col % block_size_col);// k
@@ -500,8 +483,6 @@ public:
         const int block_size_row = 128, block_size_col = 256;
 
         const auto processor_count = std::thread::hardware_concurrency();// / 2;
-
-        std::memset(RES.data, 0, RES.row * RES.col * sizeof(T));
 
         int t = F.row - (F.row % block_size_row);// i
         int l = S.col - (S.col % block_size_row);// j
@@ -659,8 +640,6 @@ public:
 
         const auto processor_count = std::thread::hardware_concurrency();// / 2;
 
-        std::memset(RES.data, 0, RES.row * RES.col * sizeof(T));
-
         int t = F.row - (F.row % block_size_row);// i
         int l = S.col - (S.col % block_size_row);// j
         int s = F.col - (F.col % block_size_col);// k
@@ -812,8 +791,6 @@ public:
         const int block_size_row = 128, block_size_col = 256, sub_block_size = 64;
 
         const auto processor_count = std::thread::hardware_concurrency();// / 2;
-
-        std::memset(RES.data, 0, RES.row * RES.col * sizeof(T));
 
         int t = F.row - (F.row % block_size_row);// i
         int l = S.col - (S.col % block_size_row);// j
@@ -978,13 +955,11 @@ public:
         if ((F.col != S.row) || (F.row != RES.row) || (S.col != RES.col)) throw std::invalid_argument("matrices sizes should match!");
         if ((&F == &RES) || (&S == &RES)) throw std::invalid_argument("RES cannot be used as argument F or S");
 
-        const int block_size_row = 144, block_size_col = 288, sub_block_size = 48;
+        const int block_size_row = 96, block_size_col = 192, sub_block_size = 48;
 
         const int sub_sub_block_size = 6, sub_sub_block_size2 = 24, sub_sub_block_size3 = 16; //sub_sub_block_size3 == 2 * sizeof(__m512); (byte)
-                                 // same time for sub_sub_block_size2 = 12 or 16 or 24                
+                                 // +- same time for sub_sub_block_size2 = 12, 16 or 24                
         const auto processor_count = std::thread::hardware_concurrency();// / 2;
-
-        std::memset(RES.data, 0, RES.row * RES.col * sizeof(T));
 
         int t = F.row - (F.row % block_size_row);// i
         int l = S.col - (S.col % block_size_row);// j
@@ -995,9 +970,9 @@ public:
             for (int k1 = 0; k1 < s; k1 += block_size_col)
                 for (int j1 = 0; j1 < l; j1 += block_size_row)
                                
-                    for (int i2 = i1; i2 < i1 + block_size_row; i2 += sub_block_size)
-                        for (int k2 = k1; k2 < k1 + block_size_col; k2 += sub_block_size)
-                            for (int j2 = j1; j2 < j1 + block_size_row; j2 += sub_block_size)
+                   for (int i2 = i1; i2 < i1 + block_size_row; i2 += sub_block_size)                            // <- useless?
+                        for (int k2 = k1; k2 < k1 + block_size_col; k2 += sub_block_size)                       // <- useless?
+                            for (int j2 = j1; j2 < j1 + block_size_row; j2 += sub_block_size)                   // <- useless?
 
                                 for (int i3 = i2; i3 < i2 + sub_block_size; i3 += sub_sub_block_size)
                                     for (int k3 = k2; k3 < k2 + sub_block_size; k3 += sub_sub_block_size2)

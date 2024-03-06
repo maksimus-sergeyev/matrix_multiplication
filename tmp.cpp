@@ -20,8 +20,6 @@ bool mult_correctness(double EPS)
 
 				A.randomfill();
 				B.randomfill();
-				C.randomfill();
-				D.randomfill();
 
 				C = A * B;
 
@@ -50,8 +48,6 @@ bool parallel_mult_correctness(double EPS)
 
 				A.randomfill();
 				B.randomfill();
-				C.randomfill();
-				D.randomfill();
 
 				C = A * B;
 
@@ -81,8 +77,6 @@ bool block_mult_correctness(double EPS)
 
 						A.randomfill();
 						B.randomfill();
-						C.randomfill();
-						D.randomfill();
 
 						parallel_mult(A, B, C);
 
@@ -103,8 +97,6 @@ bool block_mult_correctness(double EPS)
 
 						A.randomfill();
 						B.randomfill();
-						C.randomfill();
-						D.randomfill();
 
 						parallel_mult(A, B, C);
 
@@ -125,8 +117,6 @@ bool block_mult_correctness(double EPS)
 
 				A.randomfill();
 				B.randomfill();
-				C.randomfill();
-				D.randomfill();
 
 				parallel_mult(A, B, C);
 
@@ -156,8 +146,6 @@ bool parallel_block_mult_correctness(double EPS)
 
 				A.randomfill();
 				B.randomfill();
-				C.randomfill();
-				D.randomfill();
 
 				parallel_mult(A, B, C);
 
@@ -178,8 +166,6 @@ bool parallel_block_mult_correctness(double EPS)
 
 				A.randomfill();
 				B.randomfill();
-				C.randomfill();
-				D.randomfill();
 
 				parallel_mult(A, B, C);
 
@@ -200,8 +186,6 @@ bool parallel_block_mult_correctness(double EPS)
 
 				A.randomfill();
 				B.randomfill();
-				C.randomfill();
-				D.randomfill();
 
 				parallel_mult(A, B, C);
 
@@ -231,8 +215,6 @@ bool parallel_block_mult2_correctness(double EPS)
 
 				A.randomfill();
 				B.randomfill();
-				C.randomfill();
-				D.randomfill();
 
 				parallel_mult(A, B, C);
 
@@ -253,8 +235,6 @@ bool parallel_block_mult2_correctness(double EPS)
 
 				A.randomfill();
 				B.randomfill();
-				C.randomfill();
-				D.randomfill();
 
 				parallel_mult(A, B, C);
 
@@ -275,8 +255,6 @@ bool parallel_block_mult2_correctness(double EPS)
 
 				A.randomfill();
 				B.randomfill();
-				C.randomfill();
-				D.randomfill();
 
 				parallel_mult(A, B, C);
 
@@ -306,8 +284,6 @@ bool parallel_block_mult3_correctness(double EPS)
 
 				A.randomfill();
 				B.randomfill();
-				C.randomfill();
-				D.randomfill();
 
 				parallel_mult(A, B, C);
 
@@ -328,8 +304,6 @@ bool parallel_block_mult3_correctness(double EPS)
 
 				A.randomfill();
 				B.randomfill();
-				C.randomfill();
-				D.randomfill();
 
 				parallel_mult(A, B, C);
 
@@ -350,8 +324,6 @@ bool parallel_block_mult3_correctness(double EPS)
 
 				A.randomfill();
 				B.randomfill();
-				C.randomfill();
-				D.randomfill();
 
 				parallel_mult(A, B, C);
 
@@ -381,8 +353,6 @@ bool parallel_block_mult4_correctness(double EPS)
 
 				A.randomfill();
 				B.randomfill();
-				C.randomfill();
-				D.randomfill();
 
 				parallel_mult(A, B, C);
 
@@ -403,8 +373,6 @@ bool parallel_block_mult4_correctness(double EPS)
 
 				A.randomfill();
 				B.randomfill();
-				C.randomfill();
-				D.randomfill();
 
 				parallel_mult(A, B, C);
 
@@ -425,8 +393,6 @@ bool parallel_block_mult4_correctness(double EPS)
 
 				A.randomfill();
 				B.randomfill();
-				C.randomfill();
-				D.randomfill();
 
 				parallel_mult(A, B, C);
 
@@ -456,8 +422,6 @@ bool parallel_block_mult5_correctness(double EPS)
 
 				A.randomfill();
 				B.randomfill();
-				C.randomfill();
-				D.randomfill();
 
 				parallel_mult(A, B, C);
 
@@ -478,8 +442,6 @@ bool parallel_block_mult5_correctness(double EPS)
 
 				A.randomfill();
 				B.randomfill();
-				C.randomfill();
-				D.randomfill();
 
 				parallel_mult(A, B, C);
 
@@ -500,8 +462,6 @@ bool parallel_block_mult5_correctness(double EPS)
 
 				A.randomfill();
 				B.randomfill();
-				C.randomfill();
-				D.randomfill();
 
 				parallel_mult(A, B, C);
 
