@@ -31,27 +31,40 @@ const bool flag1 = 0; // parallel i, k, j multiplication
 const bool flag2 = 0; // block multiplication
 const bool flag3 = 0; // parallel block multiplication
 
-const bool flag4 = 0;	// parallel block multiplication2 (with trans. block 2nd matrix)					<- was fastest
-						//size = 8192;  best_time = 6900 ms; avg_time = 7700 ms; 
+const bool flag4 = 0;	// parallel block multiplication2 (with trans. block 2nd matrix)					
+						//size = 8192;  best_time = 6900 ms; median_time = 7700 ms; 
 
 const bool flag5 = 0;	// parallel block multiplication3 (with subblock)
-						//size = 8192;  best_time = 13000 ms; avg_time = 14600 ms;
+						//size = 8192;  best_time = 13000 ms; median_time = 14600 ms;
 
 const bool flag6 = 0;	// parallel block multiplication4 (with trans. block 2nd matrix && subblock)
-						//size = 8192;	best_time = 13000 ms; avg_time = 14600 ms;
+						//size = 8192;	best_time = 13000 ms; median_time = 14600 ms;
 
-const bool flag7 = 1;	// parallel block multiplication5 (parallel block multiplication3 with intrinsics)	<- the fastest 
-						//size = 8256;	best_time = 3750 ms; avg_time = 4400 ms;  
-						//size = 8064;  best_time = 4000 ms; avg_time = 4300 ms;
+const bool flag7 = 0;	// parallel block multiplication5 (parallel block multiplication3 with intrinsics)
+						//size = 8256;	best_time = 3750 ms; median_time = 4400 ms;  
+						//size = 8064;  best_time = 4000 ms; median_time = 4300 ms;
 						 //(sizes divisible by block_size)
-						  
-						//size = 8192 	best_time = 9300 ms; avg_time = 9800 ms;											
+
+						//size = 8192 	best_time = 9300 ms; median_time = 9800 ms;
+						//size = 8400 	time = 5900 ms;
+						//size = 8300 	time = 4900 ms;
+						//size = 8200 	time = 5400 ms;
+
+const bool flag8 = 1;	// parallel block multiplication6 (parallel block multiplication5 with other borders policy)
+						//size = 8256;	best_time = 3900 ms; median_time = 4200 ms;  
+						//size = 8064;  best_time = 3650 ms; median_time = 4100 ms;
+						 //(sizes divisible by block_size)
+
+						//size = 8192 	best_time = 5200 ms; median_time = 5800 ms;
+						//size = 8400 	time = 4700 ms;
+						//size = 8300 	time = 4850 ms;
+						//size = 8200 	time = 5000 ms;
 														
 																			
-const bool flag8 = 0;	//MKL cblas_dgemm(1, 0) = (1 * A * B + 0 * C) = A * B
-						//size = 8256; best_time = 3300 ms; avg_time = 3600 ms;
-						//size = 8064; best_time = 2950 ms; avg_time = 3300 ms;
-						//size = 8192; best_time = 3100 ms; avg_time = 3500 ms;
+const bool flag9 = 0;	//MKL cblas_dgemm(1, 0) = (1 * A * B + 0 * C) = A * B
+						//size = 8256; best_time = 3300 ms; median_time = 3600 ms;
+						//size = 8064; best_time = 2950 ms; median_time = 3300 ms;
+						//size = 8192; best_time = 3100 ms; median_time = 3500 ms;
 						
 						
 
@@ -210,8 +223,26 @@ int main()
 
 		std::cout << "The time of 'parallel block multiplication5': " << elapsed_ms.count() << " ms\n";
 	}
-	
+
 	if (flag8)
+	{
+		if (flagC) std::cout << parallel_block_mult6_correctness(EPS) << std::endl;
+
+		A.randomfill();
+		B.randomfill();
+
+		auto begin = std::chrono::steady_clock::now();
+
+		parallel_block_mult6(A, B, C);
+
+		auto end = std::chrono::steady_clock::now();
+
+		auto elapsed_ms = std::chrono::duration_cast<std::chrono::milliseconds>(end - begin);
+
+		std::cout << "The time of 'parallel block multiplication6': " << elapsed_ms.count() << " ms\n";
+	}
+	
+	if (flag9)
 	{
 		srand(time(NULL));
 

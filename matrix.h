@@ -945,11 +945,11 @@ public:
             }
         }
     }
-
     // let 
+    // T == double
     // block_size_row % sub_block_size == 0 && block_size_col % sub_block_size == 0 && 
     // sub_block_size % sub_sub_block_size == 0 && sub_block_size % sub_sub_block_size2 == 0 && sub_block_size % sub_sub_block_size3 == 0
-    inline 
+    inline
         friend void parallel_block_mult5(matrix& F, matrix& S, matrix& RES)
     {
         if ((F.col != S.row) || (F.row != RES.row) || (S.col != RES.col)) throw std::invalid_argument("matrices sizes should match!");
@@ -958,7 +958,7 @@ public:
         const int block_size_row = 96, block_size_col = 192, sub_block_size = 48;
 
         const int sub_sub_block_size = 6, sub_sub_block_size2 = 24, sub_sub_block_size3 = 16; //sub_sub_block_size3 == 2 * sizeof(__m512); (byte)
-                                 // +- same time for sub_sub_block_size2 = 12, 16 or 24                
+        // +- same time for sub_sub_block_size2 = 12, 16 or 24                
         const auto processor_count = std::thread::hardware_concurrency();// / 2;
 
         int t = F.row - (F.row % block_size_row);// i
@@ -969,8 +969,8 @@ public:
         for (int i1 = 0; i1 < t; i1 += block_size_row)
             for (int k1 = 0; k1 < s; k1 += block_size_col)
                 for (int j1 = 0; j1 < l; j1 += block_size_row)
-                               
-                   for (int i2 = i1; i2 < i1 + block_size_row; i2 += sub_block_size)                            // <- useless?
+
+                    for (int i2 = i1; i2 < i1 + block_size_row; i2 += sub_block_size)                            // <- useless?
                         for (int k2 = k1; k2 < k1 + block_size_col; k2 += sub_block_size)                       // <- useless?
                             for (int j2 = j1; j2 < j1 + block_size_row; j2 += sub_block_size)                   // <- useless?
 
@@ -981,11 +981,11 @@ public:
 
                                             __m512 c[(sub_sub_block_size << 1)];
                                             __m512 a, b1, b2;
-                                            
+
                                             for (int i4 = 0; i4 < sub_sub_block_size; i4++)
                                                 for (int j4 = 0; j4 < 2; j4++)
-                                                    c[(i4<<1) + j4] = _mm512_loadu_pd(&RES[(i4 + i3) * RES.col + j3 + j4 * (sub_sub_block_size3 >> 1)]);
-                                                
+                                                    c[(i4 << 1) + j4] = _mm512_loadu_pd(&RES[(i4 + i3) * RES.col + j3 + j4 * (sub_sub_block_size3 >> 1)]);
+
                                             for (int k5 = 0; k5 < sub_sub_block_size2; k5++)
                                             {
                                                 b1 = _mm512_loadu_pd(&S[(k3 + k5) * S.col + j3]);
@@ -998,16 +998,194 @@ public:
                                                     a = _mm512_set1_pd(F[(i3 + i5) * F.col + (k3 + k5)]);
 
                                                     c[i] = _mm512_fmadd_pd(a, b1, c[i]);
-                                                    c[i+1] = _mm512_fmadd_pd(a, b2, c[i+1]);
+                                                    c[i + 1] = _mm512_fmadd_pd(a, b2, c[i + 1]);
                                                 }
                                             }
 
                                             for (int i6 = 0; i6 < sub_sub_block_size; i6++)
-                                                for (int j6 = 0; j6 < 2; j6++) 
-                                                    _mm512_storeu_pd(&RES[(i6 + i3) * RES.col + j3 + j6 * (sub_sub_block_size3 >> 1)], c[(i6<<1) + j6]);
+                                                for (int j6 = 0; j6 < 2; j6++)
+                                                    _mm512_storeu_pd(&RES[(i6 + i3) * RES.col + j3 + j6 * (sub_sub_block_size3 >> 1)], c[(i6 << 1) + j6]);
 
                                         }
 
+        if (S.col == l)
+        {
+            if ((F.row != t) && (F.col != s))
+            {
+                //int s = F.col - (F.col % block_size_col);// k
+#pragma omp parallel for num_threads(processor_count)
+                for (int i = 0; i < F.row; i++)
+                    for (int k = s; k < F.col; k++)
+#pragma omp simd
+                        for (int j = 0; j < S.col; j++)
+                            RES[i * RES.col + j] += F[i * F.col + k] * S[k * S.col + j];
+
+                //int t = F.row - (F.row % block_size_row);// i
+#pragma omp parallel for num_threads(processor_count)
+                for (int i = t; i < F.row; i++)
+                    for (int k = 0; k < s; k++)
+#pragma omp simd
+                        for (int j = 0; j < S.col; j++)
+                            RES[i * RES.col + j] += F[i * F.col + k] * S[k * S.col + j];
+            }
+            else if ((F.row != t) && (F.col == s))
+            {
+                //int t = F.row - (F.row % block_size_row);// i
+#pragma omp parallel for num_threads(processor_count)
+                for (int i = t; i < F.row; i++)
+                    for (int k = 0; k < F.col; k++)
+#pragma omp simd
+                        for (int j = 0; j < S.col; j++)
+                            RES[i * RES.col + j] += F[i * F.col + k] * S[k * S.col + j];
+
+            }
+            else if ((F.row == t) && (F.col != s))
+            {
+                //int s = F.col - (F.col % block_size_col);// k
+#pragma omp parallel for num_threads(processor_count)
+                for (int i = 0; i < F.row; i++)
+                    for (int k = s; k < F.col; k++)
+#pragma omp simd
+                        for (int j = 0; j < S.col; j++)
+                            RES[i * RES.col + j] += F[i * F.col + k] * S[k * S.col + j];
+
+            }
+        }
+        else if (S.col != l)
+        {
+            if ((F.row != t) && (F.col != s))
+            {
+                //int s = F.col - (F.col % block_size_col);// k
+#pragma omp parallel for num_threads(processor_count)
+                for (int i = 0; i < F.row; i++)
+                    for (int k = s; k < F.col; k++)
+#pragma omp simd
+                        for (int j = 0; j < S.col; j++)
+                            RES[i * RES.col + j] += F[i * F.col + k] * S[k * S.col + j];
+
+                //int t = F.row - (F.row % block_size_row);// i
+#pragma omp parallel for num_threads(processor_count)
+                for (int i = t; i < F.row; i++)
+                    for (int k = 0; k < s; k++)
+#pragma omp simd
+                        for (int j = 0; j < S.col; j++)
+                            RES[i * RES.col + j] += F[i * F.col + k] * S[k * S.col + j];
+
+                //int l = S.col - (S.col % block_size_row);// j
+#pragma omp parallel for num_threads(processor_count)
+                for (int i = 0; i < t; i++)
+                    for (int k = 0; k < s; k++)
+#pragma omp simd
+                        for (int j = l; j < S.col; j++)
+                            RES[i * RES.col + j] += F[i * F.col + k] * S[k * S.col + j];
+            }
+            else if ((F.row != t) && (F.col == s))
+            {
+                //int t = F.row - (F.row % block_size_row);// i
+#pragma omp parallel for num_threads(processor_count)
+                for (int i = t; i < F.row; i++)
+                    for (int k = 0; k < F.col; k++)
+#pragma omp simd
+                        for (int j = 0; j < S.col; j++)
+                            RES[i * RES.col + j] += F[i * F.col + k] * S[k * S.col + j];
+
+                //int l = S.col - (S.col % block_size_row);// j
+#pragma omp parallel for num_threads(processor_count)
+                for (int i = 0; i < t; i++)
+                    for (int k = 0; k < F.col; k++)
+#pragma omp simd
+                        for (int j = l; j < S.col; j++)
+                            RES[i * RES.col + j] += F[i * F.col + k] * S[k * S.col + j];
+            }
+            else if ((F.row == t) && (F.col != s))
+            {
+                //int s = F.col - (F.col % block_size_col);// k
+#pragma omp parallel for num_threads(processor_count)
+                for (int i = 0; i < F.row; i++)
+                    for (int k = s; k < F.col; k++)
+#pragma omp simd
+                        for (int j = 0; j < S.col; j++)
+                            RES[i * RES.col + j] += F[i * F.col + k] * S[k * S.col + j];
+
+                //int l = S.col - (S.col % block_size_row);// j
+#pragma omp parallel for num_threads(processor_count)
+                for (int i = 0; i < F.row; i++)
+                    for (int k = 0; k < s; k++)
+#pragma omp simd
+                        for (int j = l; j < S.col; j++)
+                            RES[i * RES.col + j] += F[i * F.col + k] * S[k * S.col + j];
+            }
+            else if ((F.row == t) && (F.col == s))
+            {
+                //int l = S.col - (S.col % block_size_row);// j
+#pragma omp parallel for num_threads(processor_count)
+                for (int i = 0; i < F.row; i++)
+                    for (int k = 0; k < F.col; k++)
+#pragma omp simd
+                        for (int j = l; j < S.col; j++)
+                            RES[i * RES.col + j] += F[i * F.col + k] * S[k * S.col + j];
+            }
+        }
+    }
+    // let 
+    // T == double
+    // block_size_row % sub_block_size == 0, block_size_row % sub_block_size2 == 0, block_size_row % sub_block_size3 == 0 
+    // block_size_col % sub_block_size == 0, block_size_col % sub_block_size2 == 0, block_size_col % sub_block_size3 == 0 
+    inline 
+        friend void parallel_block_mult6(matrix& F, matrix& S, matrix& RES)
+    {
+        if ((F.col != S.row) || (F.row != RES.row) || (S.col != RES.col)) throw std::invalid_argument("matrices sizes should match!");
+        if ((&F == &RES) || (&S == &RES)) throw std::invalid_argument("RES cannot be used as argument F or S");
+
+        const int block_size_row = 96, block_size_col = 192;
+
+        const int sub_block_size = 6, sub_block_size2 = 48, sub_block_size3 = 16; //sub_sub_block_size3 == 2 * sizeof(__m512); (byte)
+                                    // +- same time for sub_block_size2 = 48, 96
+        const auto processor_count = std::thread::hardware_concurrency();// / 2;
+
+        int t = F.row - (F.row % sub_block_size);// i
+        int l = S.col - (S.col % sub_block_size3);// j
+        int s = F.col - (F.col % sub_block_size2);// k
+
+#pragma omp parallel for num_threads(processor_count)
+        for (int i1 = 0; i1 < F.row; i1 += block_size_row)
+            for (int k1 = 0; k1 < F.col; k1 += block_size_col)
+                for (int j1 = 0; j1 < S.col; j1 += block_size_row)           
+
+                    for (int i3 = i1; i3 < i1 + block_size_row && i3 < t; i3 += sub_block_size)
+                        for (int k3 = k1; k3 < k1 + block_size_col && k3 < s; k3 += sub_block_size2)
+                            for (int j3 = j1; j3 < j1 + block_size_row && j3 < l; j3 += sub_block_size3)
+                            {
+
+                                __m512 c[(sub_block_size << 1)];
+                                __m512 a, b1, b2;
+                                            
+                                for (int i4 = 0; i4 < sub_block_size; i4++)
+                                    for (int j4 = 0; j4 < 2; j4++)
+                                        c[(i4<<1) + j4] = _mm512_loadu_pd(&RES[(i4 + i3) * RES.col + j3 + j4 * (sub_block_size3 >> 1)]);
+                                                
+                                for (int k5 = 0; k5 < sub_block_size2; k5++)
+                                {
+                                    b1 = _mm512_loadu_pd(&S[(k3 + k5) * S.col + j3]);
+                                    b2 = _mm512_loadu_pd(&S[(k3 + k5) * S.col + j3 + (sub_block_size3 >> 1)]);
+
+                                    for (int i5 = 0; i5 < sub_block_size; i5++)
+                                    {
+                                        int i = i5 << 1;
+
+                                        a = _mm512_set1_pd(F[(i3 + i5) * F.col + (k3 + k5)]);
+
+                                        c[i] = _mm512_fmadd_pd(a, b1, c[i]);
+                                        c[i+1] = _mm512_fmadd_pd(a, b2, c[i+1]);
+                                    }
+                                }
+
+                                for (int i6 = 0; i6 < sub_block_size; i6++)
+                                    for (int j6 = 0; j6 < 2; j6++) 
+                                        _mm512_storeu_pd(&RES[(i6 + i3) * RES.col + j3 + j6 * (sub_block_size3 >> 1)], c[(i6<<1) + j6]);
+
+                            }
+        
         if (S.col == l)
         {
             if ((F.row != t) && (F.col != s))
