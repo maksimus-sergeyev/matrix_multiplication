@@ -978,7 +978,45 @@ public:
                                     for (int k3 = k2; k3 < k2 + sub_block_size; k3 += sub_sub_block_size2)
                                         for (int j3 = j2; j3 < j2 + sub_block_size; j3 += sub_sub_block_size3)
                                         {
+                                            //theoretically, with this implementation, compiler should generate code that makes better use of the superscalar architecture
 
+                                            /*
+                                            
+                                            
+                                            __m512 c[(sub_sub_block_size << 1)];
+                                            __m512 a1, a2, b1, b2, b3, b4;
+
+                                            for (int i4 = 0; i4 < sub_sub_block_size; i4++)
+                                                for (int j4 = 0; j4 < 2; j4++)
+                                                    c[(i4 << 1) + j4] = _mm512_loadu_pd(&RES[(i4 + i3) * RES.col + j3 + j4 * (sub_sub_block_size3 >> 1)]);
+
+                                            for (int k5 = 0; k5 < sub_sub_block_size2; k5 += 2)
+                                            {
+                                                b1 = _mm512_loadu_pd(&S[(k3 + k5) * S.col + j3]);
+                                                b2 = _mm512_loadu_pd(&S[(k3 + k5) * S.col + j3 + (sub_sub_block_size3 >> 1)]);
+                                                b3 = _mm512_loadu_pd(&S[(k3 + k5 + 1) * S.col + j3]);
+                                                b4 = _mm512_loadu_pd(&S[(k3 + k5 + 1) * S.col + j3 + (sub_sub_block_size3 >> 1)]);
+
+                                                for (int i5 = 0; i5 < sub_sub_block_size; i5++)
+                                                {
+                                                    int i = i5 << 1;
+                                                    a1 = _mm512_set1_pd(F[(i3 + i5) * F.col + (k3 + k5)]);
+                                                    c[i] = _mm512_fmadd_pd(a1, b1, c[i]);
+                                                    c[i + 1] = _mm512_fmadd_pd(a1, b2, c[i + 1]);
+
+                                                    a2 = _mm512_set1_pd(F[(i3 + i5) * F.col + (k3 + k5 + 1)]);
+                                                    c[i] = _mm512_fmadd_pd(a2, b3, c[i]);
+                                                    c[i + 1] = _mm512_fmadd_pd(a2, b4, c[i + 1]);
+                                                }
+                                            }
+
+                                            for (int i6 = 0; i6 < sub_sub_block_size; i6++)
+                                                for (int j6 = 0; j6 < 2; j6++)
+                                                    _mm512_storeu_pd(&RES[(i6 + i3) * RES.col + j3 + j6 * (sub_sub_block_size3 >> 1)], c[(i6 << 1) + j6]);
+                                            */
+                                            
+
+                                            // /*
                                             __m512 c[(sub_sub_block_size << 1)];
                                             __m512 a, b1, b2;
 
@@ -1005,7 +1043,7 @@ public:
                                             for (int i6 = 0; i6 < sub_sub_block_size; i6++)
                                                 for (int j6 = 0; j6 < 2; j6++)
                                                     _mm512_storeu_pd(&RES[(i6 + i3) * RES.col + j3 + j6 * (sub_sub_block_size3 >> 1)], c[(i6 << 1) + j6]);
-
+                                            // */
                                         }
 
         if (S.col == l)
@@ -1156,14 +1194,51 @@ public:
                         for (int k3 = k1; k3 < k1 + block_size_col && k3 < s; k3 += sub_block_size2)
                             for (int j3 = j1; j3 < j1 + block_size_row && j3 < l; j3 += sub_block_size3)
                             {
+                                //theoretically, with this implementation, compiler should generate code that makes better use of the superscalar architecture
 
+                                /*
+                                
                                 __m512 c[(sub_block_size << 1)];
-                                __m512 a, b1, b2;
+                                __m512 a1, a2, b1, b2, b3, b4;
                                             
                                 for (int i4 = 0; i4 < sub_block_size; i4++)
                                     for (int j4 = 0; j4 < 2; j4++)
                                         c[(i4<<1) + j4] = _mm512_loadu_pd(&RES[(i4 + i3) * RES.col + j3 + j4 * (sub_block_size3 >> 1)]);
                                                 
+                                for (int k5 = 0; k5 < sub_block_size2; k5+=2)
+                                {
+                                    b1 = _mm512_loadu_pd(&S[(k3 + k5) * S.col + j3]);
+                                    b2 = _mm512_loadu_pd(&S[(k3 + k5) * S.col + j3 + (sub_block_size3 >> 1)]);
+                                    b3 = _mm512_loadu_pd(&S[(k3 + k5 + 1) * S.col + j3]);
+                                    b4 = _mm512_loadu_pd(&S[(k3 + k5 + 1) * S.col + j3 + (sub_block_size3 >> 1)]);
+
+                                    for (int i5 = 0; i5 < sub_block_size; i5++)
+                                    {
+                                        int i = i5 << 1; 
+                                        a1 = _mm512_set1_pd(F[(i3 + i5) * F.col + (k3 + k5)]);
+                                        c[i] = _mm512_fmadd_pd(a1, b1, c[i]);
+                                        c[i + 1] = _mm512_fmadd_pd(a1, b2, c[i + 1]);
+
+                                        a2 = _mm512_set1_pd(F[(i3 + i5) * F.col + (k3 + k5 + 1)]);
+                                        c[i] = _mm512_fmadd_pd(a2, b3, c[i]);
+                                        c[i + 1] = _mm512_fmadd_pd(a2, b4, c[i + 1]);
+                                    }
+                                }
+
+                                for (int i6 = 0; i6 < sub_block_size; i6++)
+                                    for (int j6 = 0; j6 < 2; j6++) 
+                                        _mm512_storeu_pd(&RES[(i6 + i3) * RES.col + j3 + j6 * (sub_block_size3 >> 1)], c[(i6<<1) + j6]);
+                                */
+
+
+                                // /*
+                                __m512 c[(sub_block_size << 1)];
+                                __m512 a, b1, b2;
+
+                                for (int i4 = 0; i4 < sub_block_size; i4++)
+                                    for (int j4 = 0; j4 < 2; j4++)
+                                        c[(i4 << 1) + j4] = _mm512_loadu_pd(&RES[(i4 + i3) * RES.col + j3 + j4 * (sub_block_size3 >> 1)]);
+
                                 for (int k5 = 0; k5 < sub_block_size2; k5++)
                                 {
                                     b1 = _mm512_loadu_pd(&S[(k3 + k5) * S.col + j3]);
@@ -1176,14 +1251,14 @@ public:
                                         a = _mm512_set1_pd(F[(i3 + i5) * F.col + (k3 + k5)]);
 
                                         c[i] = _mm512_fmadd_pd(a, b1, c[i]);
-                                        c[i+1] = _mm512_fmadd_pd(a, b2, c[i+1]);
+                                        c[i + 1] = _mm512_fmadd_pd(a, b2, c[i + 1]);
                                     }
                                 }
 
                                 for (int i6 = 0; i6 < sub_block_size; i6++)
-                                    for (int j6 = 0; j6 < 2; j6++) 
-                                        _mm512_storeu_pd(&RES[(i6 + i3) * RES.col + j3 + j6 * (sub_block_size3 >> 1)], c[(i6<<1) + j6]);
-
+                                    for (int j6 = 0; j6 < 2; j6++)
+                                        _mm512_storeu_pd(&RES[(i6 + i3) * RES.col + j3 + j6 * (sub_block_size3 >> 1)], c[(i6 << 1) + j6]);
+                                // */
                             }
         
         if (S.col == l)
