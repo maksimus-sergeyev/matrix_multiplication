@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- <!DOCTYPE IntelParallelAdvisorSummaryCollection SYSTEM  "IntelParallelAdvisorSummaryCollection.dtd"> -->
+
+<IntelParallelAdvisorSummary version="" 
+                             kind="DATAKIND_SURVEY_EX" >
+  <hotspot filename="F:\VS\matrix_multiplication\matrix.h"
+           line_no="1242"
+           routine="parallel_block_mult6"
+           is_vectorized="2"
+           self_time="6.040892E+00"
+           total_time="6.040892E+00"
+           trip_counts="48"
+           func_instance="71"
+           priority="0"/>
+  <hotspot filename="F:\VS\matrix_multiplication\matrix.h"
+           line_no="1027"
+           routine="parallel_block_mult5"
+           is_vectorized="2"
+           self_time="5.389568E+00"
+           total_time="5.389568E+00"
+           trip_counts="24"
+           func_instance="44"
+           priority="0"/>
+  <hotspot filename=""
+           line_no="-1"
+           routine="func@0x18050ea00"
+           is_vectorized="1"
+           self_time="2.235180E+00"
+           total_time="2.235180E+00"
+           trip_counts=""
+           func_instance="107"
+           priority="0"/>
+  <hotspot filename="F:\VS\matrix_multiplication\matrix.h"
+           line_no="979"
+           routine="parallel_block_mult5"
+           is_vectorized="1"
+           self_time="1.755606E+00"
+           total_time="7.145173E+00"
+           trip_counts="3"
+           func_instance="53"
+           priority="0"/>
+  <hotspot filename=""
+           line_no="-1"
+           routine="func@0x18050ea00"
+           is_vectorized="1"
+           self_time="8.938808E-01"
+           total_time="8.938808E-01"
+           trip_counts=""
+           func_instance="104"
+           priority="0"/>
+</IntelParallelAdvisorSummary >

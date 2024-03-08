@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root>
+ <rdmgr>
+  <timestamp type="u64_t">1709906664</timestamp>
+  <hostname>DESKTOP-1Y6RVKG</hostname>
+  <os>windows</os>
+  <product>Intel® Advisor 2023.2</product>
+  <buildNumber type="s32_t">614264</buildNumber>
+  <logicalCPUCount type="s32_t">16</logicalCPUCount>
+  <physicalCoreCount type="s32_t">8</physicalCoreCount>
+  <processorPackageCount type="s32_t">1</processorPackageCount>
+  <CPUFrequency type="s64_t">2496000000</CPUFrequency>
+  <CPUFamily type="s32_t">6</CPUFamily>
+  <CPUModel type="s32_t">167</CPUModel>
+  <CPUStepping type="s32_t">1</CPUStepping>
+  <CPUBrandName>11th Gen Intel(R) Core(TM) i7-11700F @ 2.50GHz</CPUBrandName>
+  <isa>avx512</isa>
+  <collectionTimeBegin type="u64_t">1709906666</collectionTimeBegin>
+  <collectionTimeEnd type="u64_t">1709906806</collectionTimeEnd>
+  <finalizationTimeBegin type="u64_t">1709906807</finalizationTimeBegin>
+  <finalizationTimeEnd type="u64_t">1709906817</finalizationTimeEnd>
+ </rdmgr>
+</root>

@@ -1,0 +1,52 @@
+
+=== Start: [2024/03/08 17:07:02] === 
+Analysis started...
+Result file: F:\VS\matrix_multiplication\e002\mp000\mp000.advixe 
+Found target process f:\vs\matrix_multiplication\x64\release\matrix_multiplication.exe (PID = 7272). Analysis started... 
+Loaded module: f:\vs\matrix_multiplication\x64\release\matrix_multiplication.exe. 
+Loaded module: c:\windows\system32\kernelbase.dll. 
+Loaded module: c:\windows\system32\kernel32.dll. 
+Loaded module: c:\windows\system32\ntdll.dll. 
+Loaded module: c:\windows\system32\ucrtbase.dll. 
+Loaded module: c:\windows\system32\msvcp140.dll. 
+Loaded module: c:\windows\system32\vcruntime140.dll. 
+Loaded module: c:\program files (x86)\intel\oneapi\mkl\2023.2.0\redist\intel64\mkl_intel_thread.2.dll. 
+Loaded module: c:\program files (x86)\intel\oneapi\compiler\2023.2.0\windows\redist\intel64_win\compiler\libiomp5md.dll. 
+Loaded module: c:\windows\system32\vcruntime140_1.dll. 
+Loaded module: c:\program files (x86)\intel\oneapi\advisor\latest\bin64\runtime\libittnotify.dll. 
+Loaded module: c:\program files (x86)\intel\oneapi\advisor\latest\bin64\pinjitprofiling.dll. 
+Loaded module: dynamiccodebin. 
+Loaded module: c:\program files (x86)\intel\oneapi\mkl\2023.2.0\redist\intel64\mkl_core.2.dll. 
+Loaded module: c:\program files (x86)\intel\oneapi\mkl\2023.2.0\redist\intel64\libimalloc.dll. 
+Unloaded module: c:\program files (x86)\intel\oneapi\mkl\2023.2.0\redist\intel64\libimalloc.dll. 
+Loaded module: c:\program files (x86)\intel\oneapi\mkl\2023.2.0\redist\intel64\libimalloc.dll. 
+Unloaded module: c:\program files (x86)\intel\oneapi\mkl\2023.2.0\redist\intel64\libimalloc.dll. 
+Loaded module: c:\program files (x86)\intel\oneapi\mkl\2023.2.0\redist\intel64\mkl_avx512.2.dll. 
+Loaded module: c:\program files (x86)\intel\oneapi\mkl\2023.2.0\redist\intel64\mkl_vml_avx512.2.dll. 
+Loaded module: c:\windows\system32\kernel.appcore.dll. 
+Loaded module: c:\windows\system32\msvcrt.dll. 
+Loaded module: c:\windows\system32\rpcrt4.dll. 
+Unloaded module: f:\vs\matrix_multiplication\x64\release\matrix_multiplication.exe. 
+Unloaded module: c:\windows\system32\kernelbase.dll. 
+Unloaded module: c:\windows\system32\kernel32.dll. 
+Unloaded module: c:\windows\system32\ntdll.dll. 
+Unloaded module: c:\windows\system32\ucrtbase.dll. 
+Unloaded module: c:\windows\system32\msvcp140.dll. 
+Unloaded module: c:\windows\system32\vcruntime140.dll. 
+Unloaded module: c:\program files (x86)\intel\oneapi\mkl\2023.2.0\redist\intel64\mkl_intel_thread.2.dll. 
+Unloaded module: c:\program files (x86)\intel\oneapi\compiler\2023.2.0\windows\redist\intel64_win\compiler\libiomp5md.dll. 
+Unloaded module: c:\windows\system32\vcruntime140_1.dll. 
+Unloaded module: c:\program files (x86)\intel\oneapi\advisor\latest\bin64\runtime\libittnotify.dll. 
+Unloaded module: c:\program files (x86)\intel\oneapi\advisor\latest\bin64\pinjitprofiling.dll. 
+Unloaded module: c:\program files (x86)\intel\oneapi\mkl\2023.2.0\redist\intel64\mkl_core.2.dll. 
+Unloaded module: c:\program files (x86)\intel\oneapi\mkl\2023.2.0\redist\intel64\mkl_avx512.2.dll. 
+Unloaded module: c:\program files (x86)\intel\oneapi\mkl\2023.2.0\redist\intel64\mkl_vml_avx512.2.dll. 
+Unloaded module: c:\windows\system32\kernel.appcore.dll. 
+Unloaded module: c:\windows\system32\msvcrt.dll. 
+Unloaded module: c:\windows\system32\rpcrt4.dll. 
+Process f:\vs\matrix_multiplication\x64\release\matrix_multiplication.exe (PID = 7272) has terminated. 
+Warning: No SITE annotations were encountered, so no stride/alignment data can be reported. 
+Application exit code: 0 
+Result file: F:\VS\matrix_multiplication\e002\mp000\mp000.advixe 
+Analysis completed
+=== End: [2024/03/08 17:08:14] === 

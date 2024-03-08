@@ -1,0 +1,23 @@
+<?xml version='1.0' encoding='UTF-8'?>
+
+<bag xmlns:boolean="http://www.w3.org/2001/XMLSchema#boolean" xmlns:int="http://www.w3.org/2001/XMLSchema#int" int:version="1">
+ <SurveyView int:survey_view_int_operations_mode="0">
+  <BottomUpGrid>
+   <ColumnStructure DefaultColumnLayout="Default"/>
+  </BottomUpGrid>
+  <TopDownGrid>
+   <ColumnStructure DefaultColumnLayout="Top Down"/>
+  </TopDownGrid>
+  <RooflineChart rooflineState="{&quot;threadCount4RoofIdx&quot;:4,&quot;stackViewVisible&quot;:false,&quot;roofsState&quot;:{&quot;l1bandwidth&quot;:{&quot;hidden&quot;:false,&quot;selected&quot;:true},&quot;scalarl1bandwidth&quot;:{&quot;hidden&quot;:true,&quot;selected&quot;:false},&quot;scalarl2bandwidth&quot;:{&quot;hidden&quot;:true,&quot;selected&quot;:false},&quot;scalarl3bandwidth&quot;:{&quot;hidden&quot;:true,&quot;selected&quot;:false},&quot;dpvectorfmapeak&quot;:{&quot;hidden&quot;:false,&quot;selected&quot;:true,&quot;userSelected&quot;:false},&quot;dpvectoraddpeak&quot;:{&quot;hidden&quot;:false,&quot;selected&quot;:false,&quot;userSelected&quot;:false},&quot;int8vectorpeak&quot;:{&quot;selected&quot;:false,&quot;hidden&quot;:false},&quot;int16vectorpeak&quot;:{&quot;selected&quot;:false,&quot;hidden&quot;:false},&quot;int32vectoraddpeak&quot;:{&quot;hidden&quot;:false,&quot;selected&quot;:true},&quot;l3bandwidth&quot;:{&quot;hidden&quot;:false,&quot;selected&quot;:false,&quot;userSelected&quot;:true},&quot;integerscalaraddpeak&quot;:{&quot;selected&quot;:false,&quot;hidden&quot;:false},&quot;int64vectoraddpeak&quot;:{&quot;selected&quot;:false,&quot;hidden&quot;:false},&quot;drambandwidth&quot;:{&quot;selected&quot;:false,&quot;hidden&quot;:false},&quot;l2bandwidth&quot;:{&quot;selected&quot;:false,&quot;hidden&quot;:false},&quot;spvectorfmapeak&quot;:{&quot;selected&quot;:false,&quot;hidden&quot;:false},&quot;scalaraddpeak&quot;:{&quot;selected&quot;:false,&quot;hidden&quot;:false},&quot;spvectoraddpeak&quot;:{&quot;selected&quot;:false,&quot;hidden&quot;:false}},&quot;rooflineType&quot;:&quot;f-1-L1-L2-L3-DRAM-all&quot;,&quot;rulerToRoof&quot;:true,&quot;useZoneColoring&quot;:true,&quot;loopsThs&quot;:[{&quot;th&quot;:7.1,&quot;radius&quot;:4,&quot;color&quot;:&quot;green&quot;},{&quot;th&quot;:12.5,&quot;radius&quot;:6,&quot;color&quot;:&quot;yellow&quot;},{&quot;radius&quot;:8,&quot;color&quot;:&quot;red&quot;}],&quot;loopThs&quot;:[{&quot;th&quot;:7.1,&quot;radius&quot;:4,&quot;color&quot;:&quot;green&quot;},{&quot;th&quot;:12.5,&quot;radius&quot;:6,&quot;color&quot;:&quot;yellow&quot;},{&quot;radius&quot;:8,&quot;color&quot;:&quot;red&quot;}]}"/>
+ </SurveyView>
+ <workflow int:selected="4" boolean:accuracyEnable="false">
+  <pmVectorization>
+   <checked boolean:a1="true" boolean:a3="false" boolean:a6="false" boolean:a7="false"/>
+  </pmVectorization>
+  <pmRoofline>
+   <checked boolean:a1="true" boolean:a3="true" boolean:a6="true" boolean:a7="true"/>
+  </pmRoofline>
+ </workflow>
+ <MainView int:SidebarWidth="330"/>
+ <FilterView boolean:VectorizedButtonChecked="true" boolean:NotVectorizedButtonChecked="true" boolean:FakeLoopButtonChecked="false" boolean:LibrariesButtonChecked="true" ModuleFilterValue="[54,99%] matrix_multiplication.exe" SourceFilterValue="matrix.h" LoopModeFilterValue="Loops" ThreadFilterValue="All Threads"/>
+</bag>

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- <!DOCTYPE IntelParallelAdvisorSummaryCollection SYSTEM  "IntelParallelAdvisorSummaryCollection.dtd"> -->
+
+<IntelParallelAdvisorSummary version="" 
+                             kind="DATAKIND_SURVEY_EX" >
+  <hotspot filename="F:\VS\matrix_multiplication\matrix.h"
+           line_no="1242"
+           routine="parallel_block_mult6"
+           is_vectorized="2"
+           self_time="6.040892E+00"
+           total_time="0.000000E+00"
+           trip_counts=""
+           func_instance="71"
+           priority="0">
+           <recommendation id="rec_fma_enforce_vec_c" title="Force vectorization if possible" confidence="1" gain="-1"/>
+  </hotspot>
+  <hotspot filename="F:\VS\matrix_multiplication\matrix.h"
+           line_no="1027"
+           routine="parallel_block_mult5"
+           is_vectorized="2"
+           self_time="5.389568E+00"
+           total_time="0.000000E+00"
+           trip_counts=""
+           func_instance="44"
+           priority="0">
+           <recommendation id="rec_fma_enforce_vec_c" title="Force vectorization if possible" confidence="1" gain="-1"/>
+  </hotspot>
+  <hotspot filename="F:\VS\matrix_multiplication\matrix.h"
+           line_no="50"
+           routine="matrix&lt;double&gt;::randomfill"
+           is_vectorized="0"
+           self_time="6.352426E-02"
+           total_time="0.000000E+00"
+           trip_counts=""
+           func_instance="87"
+           priority="0">
+           <recommendation id="rec_type_conversions_smallest_c" title="Use the smallest data type" confidence="1" gain="-1"/>
+  </hotspot>
+  <hotspot filename="F:\VS\matrix_multiplication\matrix.h"
+           line_no="50"
+           routine="matrix&lt;double&gt;::randomfill"
+           is_vectorized="0"
+           self_time="6.352426E-02"
+           total_time="0.000000E+00"
+           trip_counts=""
+           func_instance="87"
+           priority="0">
+           <recommendation id="rec_system_functions_move_c" title="Remove system function call(s) inside loop" confidence="1" gain="-1"/>
+  </hotspot>
+  <hotspot filename="F:\VS\matrix_multiplication\matrix.h"
+           line_no="50"
+           routine="matrix&lt;double&gt;::randomfill"
+           is_vectorized="0"
+           self_time="6.352426E-02"
+           total_time="0.000000E+00"
+           trip_counts=""
+           func_instance="87"
+           priority="0">
+           <recommendation id="rec_indirect_call_simd_c" title="Vectorize call(s) to virtual method" confidence="1" gain="-1"/>
+  </hotspot>
+</IntelParallelAdvisorSummary >

@@ -1,0 +1,163 @@
+-r
+F:\VS\matrix_multiplication\e002\mp000
+--tool=map
+--record-stack-frame
+--sample-size=400000
+--record-mem-allocations
+--search-dir
+sym=F:\\VS\\matrix_multiplication\\x64\\Release
+--search-dir
+sym:r=F:\\VS\\matrix_multiplication
+--search-dir
+bin=F:\\VS\\matrix_multiplication\\x64\\Release
+--search-dir
+bin=C:\\Program Files (x86)\\Intel\\oneAPI\\compiler\\2023.2.0\\windows\\bin
+--search-dir
+bin=C:\\Program Files (x86)\\Intel\\oneAPI\\compiler\\2023.2.0\\windows\\bin\\Intel64
+--search-dir
+bin=C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.37.32822\\bin\\HostX64\\x64
+--search-dir
+bin=C:\\Program Files (x86)\\Windows Kits\\10\\bin\\10.0.22000.0\\x64
+--search-dir
+bin=C:\\Program Files (x86)\\Microsoft SDKs\\Windows\\v10.0A\\bin\\NETFX 4.8 Tools\\x64
+--search-dir
+bin=C:\\Program Files (x86)\\Windows Kits\\10\\bin\\10.0.22000.0\\x86
+--search-dir
+bin=C:\\Program Files (x86)\\Microsoft SDKs\\Windows\\v10.0A\\bin\\NETFX 4.8 Tools
+--search-dir
+bin=C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\Common7\\tools
+--search-dir
+bin=C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\Common7\\ide
+--search-dir
+bin=C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\MSBuild\\Current\\Bin\\amd64
+--search-dir
+bin=C:\\Windows\\Microsoft.NET\\Framework64\\v4.0.30319
+--search-dir
+bin=C:\\Windows\\Microsoft.NET\\Framework\\v4.0.30319
+--search-dir
+bin=C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\MSBuild\\Current\\Bin
+--search-dir
+bin=C:\\Program Files (x86)\\Intel\\oneAPI\\mpi\\latest\\bin
+--search-dir
+bin=C:\\Program Files (x86)\\Intel\\oneAPI\\mpi\\latest\\bin\\release
+--search-dir
+bin=C:\\Program Files (x86)\\Intel\\oneAPI\\mpi\\latest\\libfabric\\bin
+--search-dir
+bin=C:\\Program Files (x86)\\Intel\\oneAPI\\mpi\\latest\\libfabric\\bin\\utils
+--search-dir
+bin=C:\\Program Files (x86)\\Intel\\oneAPI\\tbb\\latest\\redist\\intel64\\vc_mt
+--search-dir
+bin=C:\\Program Files (x86)\\Intel\\oneAPI\\tbb\\latest\\redist\\ia32\\vc_mt
+--search-dir
+bin=C:\\Program Files (x86)\\Intel\\oneAPI\\compiler\\latest\\windows\\redist\\intel64_win\\compiler
+--search-dir
+bin=C:\\Program Files (x86)\\Intel\\oneAPI\\compiler\\latest\\windows\\redist\\ia32_win\\compiler
+--search-dir
+bin=C:\\Program Files (x86)\\Intel\\oneAPI
+--search-dir
+bin=C:\\Program Files (x86)\\Common Files\\Oracle\\Java\\javapath
+--search-dir
+bin=C:\\ProgramData\\Oracle\\Java\\javapath
+--search-dir
+bin=C:\\Windows\\system32
+--search-dir
+bin=C:\\Windows
+--search-dir
+bin=C:\\Windows\\System32\\Wbem
+--search-dir
+bin=C:\\Windows\\System32\\WindowsPowerShell\\v1.0
+--search-dir
+bin=C:\\Windows\\System32\\OpenSSH
+--search-dir
+bin=C:\\Program Files\\NVIDIA Corporation\\NVIDIA NvDLISR
+--search-dir
+bin=C:\\Program Files (x86)\\NVIDIA Corporation\\PhysX\\Common
+--search-dir
+bin=C:\\Program Files\\Git\\cmd
+--search-dir
+bin=C:\\Program Files (x86)\\Windows Kits\\10\\Windows Performance Toolkit
+--search-dir
+bin=C:\\Program Files\\CMake\\bin
+--search-dir
+bin=C:\\Users\\Пользователь\\AppData\\Local\\Microsoft\\WindowsApps
+--search-dir
+bin=C:\\Users\\Пользователь\\AppData\\Local\\GitHubDesktop\\bin
+--search-dir
+bin=F:\\VS\\matrix_multiplication
+--search-dir
+bin=C:\\Program Files (x86)\\Intel\\oneAPI\\tbb\\latest\\env\\..\\redist\\intel64\\vc14
+--search-dir
+bin=C:\\Program Files (x86)\\Intel\\oneAPI\\mkl\\latest\\redist\\intel64
+--search-dir
+bin=C:\\Program Files (x86)\\Intel\\oneAPI\\mkl\\latest\\bin\\intel64
+--search-dir
+bin=C:\\Program Files (x86)\\Intel\\oneAPI\\itac\\latest\\bin
+--search-dir
+bin=C:\\Program Files (x86)\\Intel\\oneAPI\\itac\\latest\\dll
+--search-dir
+bin=C:\\Program Files (x86)\\Intel\\oneAPI\\ippcp\\latest\\redist\\intel64
+--search-dir
+bin=C:\\Program Files (x86)\\Intel\\oneAPI\\ipp\\latest\\redist\\intel64
+--search-dir
+bin=C:\\Program Files (x86)\\Intel\\oneAPI\\intelpython\\latest
+--search-dir
+bin=C:\\Program Files (x86)\\Intel\\oneAPI\\intelpython\\latest\\Library\\bin
+--search-dir
+bin=C:\\Program Files (x86)\\Intel\\oneAPI\\intelpython\\latest\\Scripts
+--search-dir
+bin=C:\\Program Files (x86)\\Intel\\oneAPI\\intelpython\\latest\\condabin
+--search-dir
+bin=C:\\Program Files (x86)\\Intel\\oneAPI\\intelpython\\python3.9\\DLLs
+--search-dir
+bin=C:\\Program Files (x86)\\Intel\\oneAPI\\dpcpp-ct\\latest\\bin
+--search-dir
+bin=C:\\Program Files (x86)\\Intel\\oneAPI\\dnnl\\latest\\cpu_dpcpp_gpu_dpcpp\\bin
+--search-dir
+bin=C:\\Program Files (x86)\\Intel\\oneAPI\\dev-utilities\\latest\\bin
+--search-dir
+bin=C:\\Program Files (x86)\\Intel\\oneAPI\\debugger\\latest\\gdb\\intel64\\bin
+--search-dir
+bin=C:\\Program Files (x86)\\Intel\\oneAPI\\dal\\latest\\redist\\intel64
+--search-dir
+bin=C:\\Program Files (x86)\\Intel\\oneAPI\\compiler\\latest\\windows\\bin
+--search-dir
+bin=C:\\Program Files (x86)\\Intel\\oneAPI\\compiler\\latest\\windows\\lib
+--search-dir
+bin=C:\\Program Files (x86)\\Intel\\oneAPI\\compiler\\latest\\windows\\bin\\intel64
+--search-dir
+bin=C:\\Program Files (x86)\\Intel\\oneAPI\\compiler\\latest\\windows\\lib\\oclfpga\\host\\windows64\\bin
+--search-dir
+bin=C:\\Program Files (x86)\\Intel\\oneAPI\\compiler\\latest\\windows\\lib\\oclfpga\\bin
+--search-dir
+bin=C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\Common7\\IDE\\VC\\VCPackages
+--search-dir
+bin=C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\Common7\\IDE\\CommonExtensions\\Microsoft\\TestWindow
+--search-dir
+bin=C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\Common7\\IDE\\CommonExtensions\\Microsoft\\TeamFoundation\\Team Explorer
+--search-dir
+bin=C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\MSBuild\\Current\\bin\\Roslyn
+--search-dir
+bin=C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\Team Tools\\Performance Tools\\x64
+--search-dir
+bin=C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\Team Tools\\Performance Tools
+--search-dir
+bin=C:\\Program Files (x86)\\Windows Kits\\10\\bin\\x64
+--search-dir
+bin=C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\Common7\\IDE\\CommonExtensions\\Microsoft\\CMake\\CMake\\bin
+--search-dir
+bin=C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\Common7\\IDE\\CommonExtensions\\Microsoft\\CMake\\Ninja
+--search-dir
+bin=C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\Common7\\IDE\\VC\\Linux\\bin\\ConnectionManagerExe
+--search-dir
+bin=C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\vcpkg
+--search-dir
+bin=C:\\Program Files (x86)\\Intel\\oneAPI\\advisor\\latest\\bin64
+--search-dir
+bin=C:\\Program Files (x86)\\Intel\\oneAPI\\compiler\\latest\\windows\\lib\\ocloc
+--search-dir
+bin=C:\\Program Files (x86)\\Intel\\oneAPI\\inspector\\latest\\bin64
+--search-dir
+bin=C:\\Program Files (x86)\\Intel\\oneAPI\\vtune\\latest\\bin64
+--app-working-dir=F:\\VS\\matrix_multiplication\\x64\\Release
+--
+F:\\VS\\matrix_multiplication\\x64\\Release\\matrix_multiplication.exe

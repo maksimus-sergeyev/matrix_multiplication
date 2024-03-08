@@ -40,7 +40,7 @@ const bool flag5 = 0;	// parallel block multiplication3 (with subblock)
 const bool flag6 = 0;	// parallel block multiplication4 (with trans. block 2nd matrix && subblock)
 						//size = 8192;	best_time = 13000 ms; median_time = 14600 ms;
 
-const bool flag7 = 0;	// parallel block multiplication5 (parallel block multiplication3 with intrinsics)
+const bool flag7 = 1;	// parallel block multiplication5 (parallel block multiplication3 with intrinsics)
 						//size = 8256;	best_time = 3750 ms; median_time = 4400 ms;  
 						//size = 8064;  best_time = 4000 ms; median_time = 4300 ms;
 						 //(sizes divisible by block_size)
@@ -61,7 +61,7 @@ const bool flag8 = 1;	// parallel block multiplication6 (parallel block multipli
 						//size = 8200 	time = 5000 ms;
 														
 																			
-const bool flag9 = 0;	//MKL cblas_dgemm(1, 0) = (1 * A * B + 0 * C) = A * B
+const bool flag9 = 1;	//MKL cblas_dgemm(1, 0) = (1 * A * B + 0 * C) = A * B
 						//size = 8256; best_time = 3300 ms; median_time = 3600 ms;
 						//size = 8064; best_time = 2950 ms; median_time = 3300 ms;
 						//size = 8192; best_time = 3100 ms; median_time = 3500 ms;
@@ -73,7 +73,7 @@ const double EPS = 0.001;
 
 int main() 
 {
-	int size = 8256;
+	int size = 4032;
 	
 	matrix<double> A(size, size), B(size, size), C(size, size);
 
